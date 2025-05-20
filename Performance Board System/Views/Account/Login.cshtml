@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    var messageType = TempData["MessageType"] as string;
+    var message = TempData["Message"] as string;
+}
+
+<h1 class="text-center">Login</h1>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div id="toast" class="toast align-items-center text-light rounded-end bg-@messageType border-0 position-fixed top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body p-4">
+                @message
+            </div>
+            <button type="button" class="btn-close text-black mt-0 me-0 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="progress" style="height: 5px;">
+            <div id="toastProgress" class="progress-bar bg-@messageType" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+}
+<script src="~/js/Toaster.js"></script>
+

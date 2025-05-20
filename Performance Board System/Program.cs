@@ -2,6 +2,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//Configure Dependency Injection
+builder.Services.AddSingleton<Performance_Board_System.DBContext.DapperContext>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IUserRepository, Performance_Board_System.Repository.Implementations.UserRepository>();
 
 var app = builder.Build();
 
