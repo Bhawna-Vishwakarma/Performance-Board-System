@@ -42,6 +42,11 @@ namespace Performance_Board_System.Controllers
                     TempData["MessageType"] = "success";
                     return RedirectToAction("Login");
                 }
+                else if (result == -1)
+                {
+                    TempData["Message"] = "User already exists!";
+                    TempData["MessageType"] = "warning";
+                }
                 else
                 {
                     TempData["Message"] = "User Not Registered";
@@ -51,6 +56,7 @@ namespace Performance_Board_System.Controllers
 
             return View(user); // Return with validation messages or error toast
         }
+
 
 
     }

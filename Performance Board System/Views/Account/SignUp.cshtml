@@ -2,8 +2,8 @@
 
 @{
     ViewData["Title"] = "Sign Up";
-    var messageType = ViewBag.MessageType as string;  
-    var message = ViewBag.Message as string;
+    var messageType = TempData["MessageType"] as string;
+    var message = TempData["Message"] as string;
 }
 
 <h2 class="text-center">Sign Up</h2>
