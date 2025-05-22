@@ -18,6 +18,7 @@ namespace Performance_Board_System.Controllers
             return View();
         }
 
+        [Route("privacy")]
         public IActionResult Privacy()
         {
             return View();

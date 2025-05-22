@@ -7,6 +7,6 @@ namespace Performance_Board_System.Repository.Interfaces
 
         Task<int> LoginUser(string email, string passwordHash);
 
-        Task<User> GetUserByEmail(string email);
+        Task<User?> GetUserByEmail(string email);
     }
 }

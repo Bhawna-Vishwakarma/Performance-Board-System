@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Performance_Board_System.DBContext;
 using Performance_Board_System.Models;
 using Performance_Board_System.Repository.Interfaces;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace Performance_Board_System.Controllers
 {
@@ -36,7 +39,7 @@ namespace Performance_Board_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _userRepository.RegisterUser(user); // Inject your repository via constructor
+                var result = await _userRepository.RegisterUser(user).ConfigureAwait(false); // Inject your repository via constructor
 
                 if (result == 1)
                 {
@@ -63,14 +66,37 @@ namespace Performance_Board_System.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(string email, string password)
         {
-                var result = await _userRepository.LoginUser(email, password);
+                var result = await _userRepository.LoginUser(email, password).ConfigureAwait(false);
                 switch (result)
                 {
                     case 1:
-                        var user = await _userRepository.GetUserByEmail(email.ToLower());
-
+                        var user = await _userRepository.GetUserByEmail(email.ToLower()).ConfigureAwait(false);
+                        
                         if (user != null)
                         {
+                            // Step 1: Create claims
+                            var claims = new List<Claim>
+                            {
+                                new Claim(ClaimTypes.Name, email)
+                                // Add more claims if needed (e.g., roles)
+                            };
+
+                            // Step 2: Create identity
+                            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                            // Step 3: Create auth properties (optional)
+                            var authProperties = new AuthenticationProperties
+                            {
+                                IsPersistent = true, // persists cookie across browser sessions
+                                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+                            };
+
+                            // Step 4: Sign in the user
+                            await HttpContext.SignInAsync(
+                                CookieAuthenticationDefaults.AuthenticationScheme,
+                                new ClaimsPrincipal(claimsIdentity),
+                                authProperties).ConfigureAwait(false);
+
                             // Store essential user info in session
                             HttpContext.Session.SetString("UserFullName", user.FullName);
                             HttpContext.Session.SetString("UserEmail", user.Email);
@@ -89,10 +115,14 @@ namespace Performance_Board_System.Controllers
 
                     case -2:
                         ModelState.AddModelError("", "Incorrect email or password.");
+                        TempData["Message"] = "Incorrect email or password.";
+                        TempData["MessageType"] = "danger";
                         break;
 
                     default:
                         ModelState.AddModelError("", "An error occurred during login.");
+                        TempData["Message"] = "Error Somthing Wrong";
+                        TempData["MessageType"] = "danger";
                         break;
                 }
 
@@ -102,8 +132,11 @@ namespace Performance_Board_System.Controllers
 
         [HttpGet]
         [Route("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
+            // Clear authentication cookie
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
+
             // Clear session data
             HttpContext.Session.Clear();
             TempData["Message"] = "Logged out successfully!";
