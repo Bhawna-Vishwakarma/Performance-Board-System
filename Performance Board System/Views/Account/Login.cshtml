@@ -1,0 +1,73 @@
+﻿@{
+	ViewData["Title"] = "Login";
+	var messageType = TempData["MessageType"] as string;
+	var message = TempData["Message"] as string;
+}
+
+<h1 class="text-center">Login</h1>
+<form id="loginForm" asp-controller="Account" asp-action="Login" method="post" class="w-50 mx-auto mt-4">
+	<div class="input-wrapper">
+		<input type="email" name="email" id="email" placeholder="">
+		<label for="email">Enter your Email</label>
+	</div>
+	<p id="emailEmptyError" class="text-sm-start text-danger"></p>
+	@* <p id="emailPatternError" class="text-sm-start text-danger"></p> *@
+	
+	<div class="input-wrapper">
+		<input type="password" name="password" id="password" placeholder="">
+		<label for="password">Enter your Password</label>
+	</div>
+	<p id="passwordEmptyError" class="text-sm-start text-danger"></p>
+	@* <p id="passwordPatternError" class="text-sm-start text-danger"></p> *@
+	
+	<div class="links">
+		<a asp-controller="Account" asp-action="SignUp">Don't have an account? Sign Up</a>
+	</div>
+	
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Login</button>
+	</div>
+</form>
+
+@if (!string.IsNullOrEmpty(message))
+{
+	<div id="toast" class="toast align-items-center text-light rounded-end bg-@messageType border-0 position-fixed top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="d-flex">
+			<div class="toast-body p-4">
+				@message
+			</div>
+			<button type="button" class="btn-close text-black mt-0 me-0 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="progress" style="height: 5px;">
+			<div id="toastProgress" class="progress-bar bg-@messageType" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
+	</div>
+}
+<script src="~/js/Toaster.js"></script>
+<script>
+	document.getElementById("loginForm").addEventListener("submit", function (event) {
+	var isValid = true;
+	var emailInput = document.getElementById("email");
+	var emailError = document.getElementById("emailEmptyError");
+	var passwordInput = document.getElementById("password");
+	var passwordError = document.getElementById("passwordEmptyError");
+
+	if (!emailInput.value.trim()) {
+		emailError.textContent = "Email cannot be empty!";
+		isValid = false;
+	} else {
+		emailError.textContent = ""; // Clear error if Email is not empty
+	}
+
+	if (!passwordInput.value.trim()) {
+		passwordError.textContent = "Password cannot be empty!";
+		isValid = false;
+	} else {
+		passwordError.textContent = ""; // Clear error if Password is not empty
+	}
+
+	if (!isValid) {
+		event.preventDefault(); // Prevent form submission if validation fails
+	}
+});
+</script>

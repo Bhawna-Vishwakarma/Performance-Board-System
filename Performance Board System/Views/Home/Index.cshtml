@@ -1,8 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var userName = Context.Session.GetString("UserFullName");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userRole = Context.Session.GetString("UserRole");
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+	<h1 class="display-4">Hello, @userName!</h1>
+	<p>Your email is: @userEmail</p>
+	<p>Your role is: @userRole</p>
+    <a class="nav-link active " asp-controller="Account" asp-action="Logout"> <i class="bi bi-box-arrow-right"></i>  Logout</a>
 </div>

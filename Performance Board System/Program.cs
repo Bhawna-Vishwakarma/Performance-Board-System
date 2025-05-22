@@ -2,6 +2,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//Configure Dependency Injection
+builder.Services.AddSingleton<Performance_Board_System.DBContext.DapperContext>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IUserRepository, Performance_Board_System.Repository.Implementations.UserRepository>();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -12,6 +16,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

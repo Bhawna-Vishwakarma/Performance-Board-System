@@ -1,0 +1,159 @@
+﻿@model Performance_Board_System.Models.User
+
+@{
+    ViewData["Title"] = "Sign Up";
+    var messageType = TempData["MessageType"] as string;
+    var message = TempData["Message"] as string;
+}
+
+<h2 class="text-center">Sign Up</h2>
+
+<form id="signupForm" asp-controller="Account" asp-action="SignUp" method="post" class="w-50 mx-auto mt-4">
+    <div class="input-wrapper">
+        <input type="email" name="Email" id="Email" placeholder="">
+        <label for="Email">Enter your Email</label>
+    </div>
+    <p id="emailPatternError" class="text-sm-start text-danger"></p>
+
+    <div class="input-wrapper">
+        <input type="text" name="FullName" id="FullName" placeholder="">
+        <label for="FullName">Enter your Full Name</label>
+    </div>
+    <p id="FullNameEmptyError" class="text-sm-start text-danger"></p>
+
+    <div class="input-wrapper">
+        <input type="password" name="PasswordHash" id="PasswordHash" placeholder="">
+        <label for="PasswordHash">Enter your Password</label>
+    </div>
+    <p id="passwordPatternError" class="text-sm-start text-danger"></p>
+
+
+    <div class="input-wrapper">
+        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="">
+        <label for="ConfirmPassword">Confirm your Password</label>
+    </div>
+    <p id="confirmPasswordError" class="text-sm-start text-danger"></p>
+
+    <div class="form-group mb-3">
+        <label asp-for="Role" class="form-label">Role</label>
+        <select asp-for="Role" class="form-select" name="Role">
+            <option value="">-- Select Role --</option>
+            <option value="Manager">Manager</option>
+            <option value="Employee">Employee</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="links">
+        <a asp-controller="Account" asp-action="Login">Already have an account? Login</a>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </div>
+</form>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div id="toast" class="toast align-items-center text-light rounded-end bg-@messageType border-0 position-fixed top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body p-4">
+                @message
+            </div>
+            <button type="button" class="btn-close text-black mt-0 me-0 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="progress" style="height: 5px;">
+            <div id="toastProgress" class="progress-bar bg-@messageType" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+}
+
+@* For Passwording Pattern Maching *@
+<script>
+    document.getElementById("signupForm").addEventListener("submit", function (event) {
+        var passwordInput = document.getElementById("PasswordHash");
+        var confirmPasswordInput = document.getElementById("ConfirmPassword");
+        var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@@$!%*?&])[A-Za-z\d@@$!%*?&]{8,}$/;
+        var passwordPatternError = document.getElementById("passwordPatternError");
+        var confirmPasswordError = document.getElementById("confirmPasswordError");
+        var emailInput = document.getElementById("Email");
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var emailPatternError = document.getElementById("emailPatternError");
+        var FullNameInput = document.getElementById("FullName");
+
+        var isValid = true;
+
+        if (!passwordPattern.test(passwordInput.value)) {
+            passwordPatternError.textContent = "Password must contain at least one uppercase letter, lowercase letter, number, and special characters.";
+            isValid = false;
+        } else {
+            passwordPatternError.textContent = ""; // Clear error if passwords match and meet criteria
+        }
+
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            confirmPasswordError.textContent = "Passwords do not match!";
+            isValid = false;
+        } else {
+            confirmPasswordError.textContent = ""; // Clear error if passwords match and meet criteria
+        }
+
+        if (!emailPattern.test(emailInput.value.trim())) {
+            emailPatternError.textContent = "Please enter a valid email address.";
+            isValid = false;
+        } else {
+            emailPatternError.textContent = ""; // Clear error if email meet criteria
+        }
+
+        if (FullNameInput.value.trim() === "") {
+            document.getElementById("FullNameEmptyError").textContent = "First Name cannot be empty!";
+            isValid = false;
+        } else {
+            document.getElementById("FullNameEmptyError").textContent = ""; // Clear error if first name is not empty
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+    });
+
+    // Matches passsword pattern
+    document.getElementById("PasswordHash").addEventListener("focusout", function (event) {
+        var passwordInput = document.getElementById("PasswordHash");
+        var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@@$!%*?&])[A-Za-z\d@@$!%*?&]{8,}$/;
+        var passwordPatternError = document.getElementById("passwordPatternError");
+
+        if (!passwordPattern.test(passwordInput.value)) {
+            passwordPatternError.textContent = "Password must contain at least one uppercase letter, lowercase letter, number, and special characters.";
+        } else {
+            passwordPatternError.textContent = ""; // Clear error if passwords match with criteria
+        }
+    });
+
+    document.getElementById("ConfirmPassword").addEventListener("focusout", function (event) {
+        var password = document.getElementById("PasswordHash").value;
+        var confirmPassword = document.getElementById("ConfirmPassword").value;
+        var confirmPasswordError = document.getElementById("confirmPasswordError");
+
+        if (password !== confirmPassword) {
+            confirmPasswordError.textContent = "Passwords do not match!";
+        } else {
+            confirmPasswordError.textContent = ""; // Clear error if passwords match and meet criteria
+        }
+    });
+
+    document.getElementById("Email").addEventListener("focusout", function (event) {
+        var emailInput = document.getElementById("Email");
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var emailPatternError = document.getElementById("emailPatternError");
+
+        if (!emailPattern.test(emailInput.value.trim())) {
+            emailPatternError.textContent = "Please enter a valid email address.";
+        } else {
+            emailPatternError.textContent = "";
+        }
+    });
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
