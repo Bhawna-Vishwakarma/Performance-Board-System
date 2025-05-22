@@ -45,7 +45,7 @@ namespace Performance_Board_System.Controllers
                 {
                     TempData["Message"] = "User registered successfully!";
                     TempData["MessageType"] = "success";
-                    return RedirectToAction("Login");
+                    return RedirectToAction("login");
                 }
                 else if (result == -1)
                 {
@@ -105,7 +105,7 @@ namespace Performance_Board_System.Controllers
 
                         TempData["Message"] = "Login successful!";
                         TempData["MessageType"] = "success";
-                        return RedirectToAction("Index", "Home");
+                        return Redirect("dashboard");
 
                     case -1:
                         ModelState.AddModelError("", "Your account is inactive.");

@@ -1,0 +1,82 @@
+﻿body {
+/*     background: linear-gradient(135deg, #dbeafe, #f0f9ff); */
+    background: linear-gradient(120deg, #fdfcfb, #e2d1c3);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.signup-container {
+    margin-top: 100px;
+    width: 500px;
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+    .input-wrapper input {
+        width: 100%;
+        padding: 10px 10px 10px 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: none;
+    }
+
+.input-wrapper label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #aaa;
+    font-size: 14px;
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+.input-wrapper input:focus ~ label,
+.input-wrapper input:not(:placeholder-shown) ~ label {
+    top: -10px;
+    left: 5px;
+    font-size: 12px;
+    color: #007bff;
+    background: white;
+    padding: 0 5px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #007bff;
+}
+
+#passwordStrength {
+    height: 5px;
+    margin-top: 5px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#passwordStrengthBar {
+    height: 100%;
+    width: 0%;
+    transition: 0.3s;
+}
+
+.strength-weak {
+    background-color: red;
+}
+
+.strength-medium {
+    background-color: orange;
+}
+
+.strength-strong {
+    background-color: green;
+}

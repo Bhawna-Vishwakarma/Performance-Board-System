@@ -10,9 +10,20 @@ builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IUserR
 //Added for session
 builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => {
-        options.LoginPath = "/Account/Login";
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                // Force redirect to /login without ReturnUrl
+                context.Response.Redirect("/login");
+                return Task.CompletedTask;
+            }
+        };
     });
+
 
 var app = builder.Build();
 
@@ -34,8 +45,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/signup");
+    return Task.CompletedTask;
+});
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=SignUp}/{id?}");
 
 app.Run();
