@@ -33,7 +33,7 @@ namespace Performance_Board_System.Repository.Implementations
                     parameters.Add("@Role", user.Role);
                     parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                    await connection.ExecuteAsync("RegisterUser",parameters,commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync("RegisterUser", parameters, commandType: CommandType.StoredProcedure);
 
                     int result = parameters.Get<int>("@Result");
                     return result;
@@ -46,6 +46,25 @@ namespace Performance_Board_System.Repository.Implementations
             }
         }
 
+        public async Task<int> LoginUser(string email, string passwordHash)
+        {
+            using var connection = _context.CreateConnection();
+            passwordHash = Convert.ToBase64String(Encoding.UTF8.GetBytes(passwordHash));
+            var parameters = new DynamicParameters();
+            parameters.Add("@Email", email);
+            parameters.Add("@PasswordHash", passwordHash);
+            parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
+            connection.Execute("LoginUser", parameters, commandType: CommandType.StoredProcedure);
+            return parameters.Get<int>("@Result");
+        }
+
+        public async Task<User?> GetUserByEmail(string email)
+        {
+            using var connection = _context.CreateConnection();
+            return connection.QueryFirstOrDefault<User>(
+                "SELECT Id, FullName, Email, Role FROM Users WHERE Email = @Email",
+                new { Email = email });
+        }
     }
 }
