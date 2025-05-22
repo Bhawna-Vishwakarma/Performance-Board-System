@@ -3,31 +3,31 @@
 	var messageType = TempData["MessageType"] as string;
 	var message = TempData["Message"] as string;
 }
+<div class="signup-container mx-auto bg-white rounded-3 shadow py-4 px-5">
+	<h1 class="text-center">Login</h1>
+	<form id="loginForm" asp-controller="Account" asp-action="Login" method="post" class="mt-4">
+		<div class="input-wrapper">
+			<input type="email" name="email" id="email" placeholder=" " required>
+			<label for="email">Enter your Email<sup>*</sup></label>
+		</div>
+		<p id="emailEmptyError" class="text-sm-start text-danger"></p>
 
-<h1 class="text-center">Login</h1>
-<form id="loginForm" asp-controller="Account" asp-action="Login" method="post" class="w-50 mx-auto mt-4">
-	<div class="input-wrapper">
-		<input type="email" name="email" id="email" placeholder="">
-		<label for="email">Enter your Email</label>
-	</div>
-	<p id="emailEmptyError" class="text-sm-start text-danger"></p>
-	@* <p id="emailPatternError" class="text-sm-start text-danger"></p> *@
-	
-	<div class="input-wrapper">
-		<input type="password" name="password" id="password" placeholder="">
-		<label for="password">Enter your Password</label>
-	</div>
-	<p id="passwordEmptyError" class="text-sm-start text-danger"></p>
-	@* <p id="passwordPatternError" class="text-sm-start text-danger"></p> *@
-	
-	<div class="links">
-		<a asp-controller="Account" asp-action="SignUp">Don't have an account? Sign Up</a>
-	</div>
-	
-	<div class="text-center">
-		<button type="submit" class="btn btn-primary">Login</button>
-	</div>
-</form>
+		<div class="input-wrapper position-relative">
+			<input type="password" name="password" id="password" placeholder=" " required>
+			<label for="password">Enter your Password</label>
+			<span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+		</div>
+		<p id="passwordEmptyError" class="text-sm-start text-danger"></p>
+
+		<div class="links">
+			<a class="text-decoration-none text-primary" asp-controller="Account" asp-action="SignUp">Don't have an account? Sign Up</a>
+		</div>
+
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary my-3 px-3">Login</button>
+		</div>
+	</form>	
+</div>
 
 @if (!string.IsNullOrEmpty(message))
 {
@@ -43,7 +43,6 @@
 		</div>
 	</div>
 }
-<script src="~/js/Toaster.js"></script>
 <script>
 	document.getElementById("loginForm").addEventListener("submit", function (event) {
 	var isValid = true;
@@ -70,4 +69,28 @@
 		event.preventDefault(); // Prevent form submission if validation fails
 	}
 });
+</script>
+<script>
+	document.getElementById('email').addEventListener('input', function () {
+		const error = document.getElementById('emailEmptyError');
+		if (this.value.trim() === '') {
+			error.textContent = "Email is required.";
+		} else {
+			error.textContent = "";
+		}
+	});
+
+	document.getElementById('password').addEventListener('input', function () {
+		const error = document.getElementById('passwordEmptyError');
+		if (this.value.trim() === '') {
+			error.textContent = "Password is required.";
+		} else {
+			error.textContent = "";
+		}
+	});
+
+	function togglePassword(id) {
+		const input = document.getElementById(id);
+		input.type = input.type === "password" ? "text" : "password";
+	}
 </script>

@@ -5,53 +5,56 @@
     var messageType = TempData["MessageType"] as string;
     var message = TempData["Message"] as string;
 }
+<div class="signup-container mx-auto bg-white rounded-3 shadow py-4 px-5">
+    <h2 class="text-center">Sign Up</h2>
+    <form id="signupForm" asp-controller="Account" asp-action="SignUp" method="post" class="mt-4">
+        <div class="input-wrapper">
+            <input type="email" name="Email" id="Email" placeholder=" " required>
+            <label for="Email">Enter your Email<sup>*</sup></label>
+        </div>
+        <p id="emailPatternError" class="text-sm-start text-danger"></p>
 
-<h2 class="text-center">Sign Up</h2>
+        <div class="input-wrapper">
+            <input type="text" name="FullName" id="FullName" placeholder=" " required>
+            <label for="FullName">Enter your Full Name<sup>*</sup></label>
+        </div>
+        <p id="FullNameEmptyError" class="text-sm-start text-danger"></p>
 
-<form id="signupForm" asp-controller="Account" asp-action="SignUp" method="post" class="w-50 mx-auto mt-4">
-    <div class="input-wrapper">
-        <input type="email" name="Email" id="Email" placeholder="">
-        <label for="Email">Enter your Email</label>
-    </div>
-    <p id="emailPatternError" class="text-sm-start text-danger"></p>
+        <div class="input-wrapper position-relative">
+            <input type="password" name="PasswordHash" id="PasswordHash" placeholder=" " required>
+            <label for="PasswordHash">Enter your Password</label>
+            <span class="password-toggle" onclick="togglePassword('PasswordHash')">👁️</span>
+        </div>
+        <div id="passwordStrength" style="display: none;"><div id="passwordStrengthBar"></div></div>
+        <p id="passwordPatternError" class="text-sm-start text-danger"></p>
 
-    <div class="input-wrapper">
-        <input type="text" name="FullName" id="FullName" placeholder="">
-        <label for="FullName">Enter your Full Name</label>
-    </div>
-    <p id="FullNameEmptyError" class="text-sm-start text-danger"></p>
+        <div class="input-wrapper position-relative">
+            <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder=" " required>
+            <label for="ConfirmPassword">Confirm your Password</label>
+            <span class="password-toggle" onclick="togglePassword('ConfirmPassword')">👁️</span>
+        </div>
+        <p id="confirmPasswordError" class="text-sm-start text-danger"></p>
 
-    <div class="input-wrapper">
-        <input type="password" name="PasswordHash" id="PasswordHash" placeholder="">
-        <label for="PasswordHash">Enter your Password</label>
-    </div>
-    <p id="passwordPatternError" class="text-sm-start text-danger"></p>
+        <div class="form-group mb-3">
+            <label asp-for="Role" class="form-label">Role<sup>*</sup></label>
+            <select asp-for="Role" class="form-select" name="Role" required>
+                <option value="">-- Select Role --</option>
+                <option value="Manager">Manager</option>
+                <option value="Employee">Employee</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
 
+        <div class="links">
+            <a class="text-decoration-none text-primary" asp-controller="Account" asp-action="Login">Already have an account? Login</a>
+        </div>
 
-    <div class="input-wrapper">
-        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="">
-        <label for="ConfirmPassword">Confirm your Password</label>
-    </div>
-    <p id="confirmPasswordError" class="text-sm-start text-danger"></p>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary my-3 px-3">Sign Up</button>
+        </div>
+    </form>
+</div>
 
-    <div class="form-group mb-3">
-        <label asp-for="Role" class="form-label">Role</label>
-        <select asp-for="Role" class="form-select" name="Role">
-            <option value="">-- Select Role --</option>
-            <option value="Manager">Manager</option>
-            <option value="Employee">Employee</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
-
-    <div class="links">
-        <a asp-controller="Account" asp-action="Login">Already have an account? Login</a>
-    </div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-    </div>
-</form>
 @if (!string.IsNullOrEmpty(message))
 {
     <div id="toast" class="toast align-items-center text-light rounded-end bg-@messageType border-0 position-fixed top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -152,6 +155,105 @@
         }
     });
 </script>
+@* script for hiding passwordStrengthBar display only when user typing his password *@
+<script>
+document.getElementById('PasswordHash').addEventListener('input', function () {
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthContainer = document.getElementById('passwordStrength');
+    const value = this.value;
+    const error = document.getElementById('passwordPatternError');
+
+    // Show/hide strength bar container
+    if (value.trim() === "") {
+        strengthContainer.style.display = "none";
+        strengthBar.style.width = "0%";
+        error.textContent = "";
+        return;
+    } else {
+        strengthContainer.style.display = "block";
+    }
+
+    // Password strength logic
+    let strength = 0;
+    if (value.length >= 8) strength++;
+    if (/[A-Z]/.test(value)) strength++;
+    if (/[0-9]/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+    // Update bar styles
+    if (strength <= 1) {
+        strengthBar.className = "strength-weak";
+        strengthBar.style.width = "33%";
+    } else if (strength === 2 || strength === 3) {
+        strengthBar.className = "strength-medium";
+        strengthBar.style.width = "66%";
+    } else {
+        strengthBar.className = "strength-strong";
+        strengthBar.style.width = "100%";
+    }
+
+    error.textContent = value.length < 8 ? "Password must be at least 8 characters." : "";
+});
+</script>
+
+@* script for without hiding passwordStrengthBar *@
+@* <script>
+    document.getElementById('Email').addEventListener('input', function () {
+        const emailPattern = /^[^ ]+@@[^ ]+\.[a-z]{2,3}$/;
+        const error = document.getElementById('emailPatternError');
+        if (!emailPattern.test(this.value)) {
+            error.textContent = "Please enter a valid email address.";
+        } else {
+            error.textContent = "";
+        }
+    });
+
+    document.getElementById('FullName').addEventListener('input', function () {
+        const error = document.getElementById('FullNameEmptyError');
+        error.textContent = this.value.trim() === "" ? "Full name is required." : "";
+    });
+
+    document.getElementById('PasswordHash').addEventListener('input', function () {
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const value = this.value;
+        const error = document.getElementById('passwordPatternError');
+
+        // Simple strength logic
+        let strength = 0;
+        if (value.length >= 8) strength++;
+        if (/[A-Z]/.test(value)) strength++;
+        if (/[0-9]/.test(value)) strength++;
+        if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+        // Update strength bar
+        if (strength === 0) {
+            strengthBar.style.width = "0%";
+        } else if (strength <= 2) {
+            strengthBar.className = "strength-weak";
+            strengthBar.style.width = "33%";
+        } else if (strength === 3) {
+            strengthBar.className = "strength-medium";
+            strengthBar.style.width = "66%";
+        } else {
+            strengthBar.className = "strength-strong";
+            strengthBar.style.width = "100%";
+        }
+
+        // Optional message
+        error.textContent = value.length < 8 ? "Password must be at least 8 characters." : "";
+    });
+
+    document.getElementById('ConfirmPassword').addEventListener('input', function () {
+        const error = document.getElementById('confirmPasswordError');
+        const password = document.getElementById('PasswordHash').value;
+        error.textContent = this.value !== password ? "Passwords do not match." : "";
+    });
+
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+    }
+</script> *@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

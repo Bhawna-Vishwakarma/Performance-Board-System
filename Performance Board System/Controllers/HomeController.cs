@@ -1,9 +1,12 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Performance_Board_System.Models;
 
 namespace Performance_Board_System.Controllers
 {
+    [Authorize] //revent direct access of methos only can after login 
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)] //after loggedout prevent redirect with cache data
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,11 +16,13 @@ namespace Performance_Board_System.Controllers
             _logger = logger;
         }
 
+        [Route("dashboard")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Route("privacy")]
         public IActionResult Privacy()
         {
             return View();
