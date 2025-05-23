@@ -16,11 +16,26 @@ namespace Performance_Board_System.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Getting Employee Dashboard.
+        /// </summary>
+        /// <returns></returns>
         [Route("dashboard")]
         public IActionResult Index()
         {
             return View();
         }
+
+        /// <summary>
+        /// Get Employee Rating.
+        /// </summary>
+        /// <returns></returns>
+        [Route("my-rating")]
+        public IActionResult Rating()
+        {
+            return View();
+        }
+
 
         [Route("privacy")]
         public IActionResult Privacy()

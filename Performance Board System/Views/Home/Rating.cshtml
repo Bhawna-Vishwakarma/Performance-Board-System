@@ -1,0 +1,60 @@
+﻿@{
+	ViewData["Title"] = "My Rating";
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-4" id="mainContent">
+		<div class="rating-card">
+			<div class="d-flex justify-content-between align-items-center mb-4"> <h3 class="mb-0">My Ratings</h3> <span class="rating-badge">Last updated: @DateTime.Now.ToString("MMM dd, yyyy")</span> </div>
+
+			<div class="mb-4">
+				<h5>Average Score</h5>
+				<div class="average-score">4.3 / 5 <i class="bi bi-star-fill me-1"></i></div>
+				<p class="text-muted">Based on performance reviews from managers and peers.</p>
+			</div>
+
+			<hr />
+
+			<div class="mb-3">
+				<div class="d-flex justify-content-between">
+					<span class="metric-label">Communication</span>
+					<span>4.5</span>
+				</div>
+				<div class="progress" style="height: 8px;">
+					<div class="progress-bar bg-success" style="width: 90%;"></div>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<div class="d-flex justify-content-between">
+					<span class="metric-label">Teamwork</span>
+					<span>4.2</span>
+				</div>
+				<div class="progress" style="height: 8px;">
+					<div class="progress-bar bg-info" style="width: 84%;"></div>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<div class="d-flex justify-content-between">
+					<span class="metric-label">Punctuality</span>
+					<span>4.0</span>
+				</div>
+				<div class="progress" style="height: 8px;">
+					<div class="progress-bar bg-warning" style="width: 80%;"></div>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<div class="d-flex justify-content-between">
+					<span class="metric-label">Task Completion</span>
+					<span>4.6</span>
+				</div>
+				<div class="progress" style="height: 8px;">
+					<div class="progress-bar bg-primary" style="width: 92%;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

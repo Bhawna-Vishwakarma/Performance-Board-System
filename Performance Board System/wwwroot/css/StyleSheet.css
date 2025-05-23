@@ -8,6 +8,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/*Login and SignUp Styles.*/
 .signup-container {
     margin-top: 100px;
     width: 500px;
@@ -80,9 +81,72 @@
 .strength-strong {
     background-color: green;
 }
+
+/*Dashboard / Index and Sidebar Page Style*/
+.dashboardLayout {
+    min-height: 100vh;
+}
+
+#sidebar {
+    width: 250px;
+    min-height: 100vh;
+    position: fixed;
+    background-color: #326a98;
+}
+
+.bi-star-fill {
+    color: #ffc107;
+/*    font-size: 16px;*/
+}
+.mainContent {
+/*    background: linear-gradient(120deg, #fdfcfb, #e2d1c3);*/
+    margin-left: 250px;
+}
+
+.nav-item:hover, .active {
+    background-color: #86b7fe !important;
+    border-radius: 10px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
 .nav-link {
     text-decoration: none;
 }
 .nav-item {
     margin-bottom: 10px;
+}
+
+/*MyRating section Styles.*/
+.rating-card {
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    padding: 2rem;
+    background: #ffffff;
+}
+
+.metric-label {
+    font-weight: 600;
+}
+
+.rating-badge {
+    font-size: 1.2rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.average-score {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+@@media (max-width: 768px) {
+    .rating-card {
+        padding: 1.5rem;
+    }
 }

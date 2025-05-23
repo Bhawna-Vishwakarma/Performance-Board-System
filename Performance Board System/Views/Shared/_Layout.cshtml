@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Performance_Board_System.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     @* @if(!isAuthPage)
@@ -43,8 +44,42 @@
         </header>
     } *@
     <div class="container">
+        @if (!isAuthPage)
+        {
+            <!-- Sidebar -->
+            <div class="text-white p-3" id="sidebar">
+                <h4 class="mb-4">Performance Board</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Rating" ? "active" : "")" asp-controller="Home" asp-action="Rating">My Ratings <i class="bi bi-star-fill me-1"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Feedback" ? "active" : "")" asp-controller="Home" asp-action="Feedback">Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Attendance" ? "active" : "")" asp-controller="Home" asp-action="Attendance">Attendance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(currentController == "Account" && currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        }
         <main role="main">
             @RenderBody()
+            @if(!isAuthPage){
+                <footer class="mainContent border-top mt-5 mb-3 footer text-muted">
+                    <div class="container text-center">
+                        &copy; 2025 - Performance_Board_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </footer>
+            }
         </main>
     </div>
 
