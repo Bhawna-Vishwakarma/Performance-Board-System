@@ -15,9 +15,9 @@
     <link rel="stylesheet" href="~/Performance_Board_System.styles.css" asp-append-version="true" />
 </head>
 <body>
-    @if(!isAuthPage)
+    @* @if(!isAuthPage)
     {
-        <header>
+        <header class="position-fixed start-0">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Performance Board System</a>
@@ -33,41 +33,29 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
-                            @if (!User?.Identity?.IsAuthenticated ?? false)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="SignUp">Sign-up</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </header>
-    }
+    } *@
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    @if(!isAuthPage)
+    @* @if(!isAuthPage)
     {
         <footer class="border-top footer text-muted">
             <div class="container">
                 &copy; 2025 - Performance_Board_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>
-    }
+    } *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

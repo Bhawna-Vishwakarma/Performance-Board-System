@@ -80,3 +80,9 @@
 .strength-strong {
     background-color: green;
 }
+.nav-link {
+    text-decoration: none;
+}
+.nav-item {
+    margin-bottom: 10px;
+}
