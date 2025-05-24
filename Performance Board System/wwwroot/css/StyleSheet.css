@@ -7,7 +7,9 @@
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
+.bg-primary {
+    background-color: #326a98 !important;
+}
 /*Login and SignUp Styles.*/
 .signup-container {
     margin-top: 100px;
@@ -104,7 +106,7 @@
 }
 
 .nav-item:hover, .active {
-    background-color: #86b7fe !important;
+    background-color: #577eb5 !important;
     border-radius: 10px;
 }
 

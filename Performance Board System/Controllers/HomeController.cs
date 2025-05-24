@@ -36,6 +36,27 @@ namespace Performance_Board_System.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Get Employee Feedback.
+        /// </summary>
+        /// <returns></returns>
+        [Route("feedbacks")]
+        public IActionResult Feedback()
+        {
+            return View();
+        }
+
+
+
+        /// <summary>
+        /// Get Employee Attendance.
+        /// </summary>
+        /// <returns></returns>
+        [Route("attendance")]
+        public IActionResult Attendance()
+        {
+            return View();
+        }
 
         [Route("privacy")]
         public IActionResult Privacy()

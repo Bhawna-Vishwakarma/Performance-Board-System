@@ -1,0 +1,75 @@
+﻿@{
+	ViewData["Title"] = "Attendance";
+}
+<style>
+	@@media (max-width: 576px) {
+		table {
+			font-size: 0.875rem;
+		}
+
+		h3 {
+			font-size: 1.2rem;
+		}
+	}
+
+	.table thead th {
+		white-space: nowrap;
+	}
+
+	.table td,
+	.table th {
+		vertical-align: middle;
+	}
+</style>
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-4" id="mainContent">
+		<div class="row mb-4 justify-content-between align-items-center">
+			<div class="col-md-6">
+				<h3 class="mb-0">Attendance Records</h3>
+			</div>
+			<div class="col-md-6 text-md-end mt-3 mt-md-0">
+				<form class="d-inline-flex gap-2" method="get" asp-action="Attendance">
+					<input type="date" class="form-control" name="dateFilter" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+					<button type="submit" class="btn btn-primary">Filter</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="table-responsive shadow rounded">
+			<table class="table table-bordered table-hover align-middle text-center mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Days</th>
+						<th>Name</th>
+						<th>Date</th>
+						<th>Check-In</th>
+						<th>Check-Out</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					@* Example static data, replace with your model loop *@
+					@for (int i = 1; i <= 5; i++)
+					{
+						<tr>
+							<td>@i</td>
+							<td>John Doe</td>
+							<td>@DateTime.Now.ToShortDateString()</td>
+							<td>9:00 AM</td>
+							<td>6:00 PM</td>
+							<td><span class="badge bg-success">Present</span></td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="text-end mt-3">
+		<form asp-action="MarkAttendance" method="post">
+			<button type="submit" class="btn btn-success">Check In</button>
+			<button type="submit" class="btn btn-success">Check Out</button>
+		</form>
+	</div>
+</div>
