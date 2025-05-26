@@ -1,0 +1,30 @@
+﻿@{
+	ViewData["Title"] = "Mark Attendance";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-4" id="mainContent">
+		
+	</div>
+</div>
+
+@* @section Scripts {
+	<script>
+		function setAttendance(type) {
+			const now = new Date();
+			const formattedTime = now.toTimeString().slice(0, 5); // "HH:mm"
+
+			document.getElementById('actionType').value = type;
+
+			if (type === 'CheckIn') {
+				document.getElementById('checkInTime').value = formattedTime;
+				document.getElementById('statusDiv').style.display = 'block';
+			} else {
+				document.getElementById('checkOutTime').value = formattedTime;
+				document.getElementById('statusDiv').style.display = 'none';
+			}
+		}
+	</script>
+} *@

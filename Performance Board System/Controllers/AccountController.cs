@@ -6,6 +6,7 @@ using Performance_Board_System.Models;
 using Performance_Board_System.Repository.Interfaces;
 using System.Reflection;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Performance_Board_System.Controllers
 {
@@ -100,6 +101,7 @@ namespace Performance_Board_System.Controllers
                             // Store essential user info in session
                             HttpContext.Session.SetString("UserFullName", user.FullName);
                             HttpContext.Session.SetString("UserEmail", user.Email);
+                            HttpContext.Session.SetString("UserId", user.Id.ToString());
                             HttpContext.Session.SetString("UserRole", user.Role);
                         }
 

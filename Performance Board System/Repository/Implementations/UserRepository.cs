@@ -1,11 +1,12 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Performance_Board_System.DBContext;
 using Performance_Board_System.Models;
 using Performance_Board_System.Repository.Interfaces;
-using Microsoft.Data.SqlClient;
-using System.Text;
 using System.Data;
+using System.Text;
 
 namespace Performance_Board_System.Repository.Implementations
 {
@@ -66,5 +67,74 @@ namespace Performance_Board_System.Repository.Implementations
                 "SELECT Id, FullName, Email, Role FROM Users WHERE Email = @Email",
                 new { Email = email }).ConfigureAwait(false);
         }
+
+        public int MarkAttendance(int userId, DateTime date, TimeSpan? checkIn, TimeSpan? checkOut, string status)
+        {
+            using var connection = _context.CreateConnection();
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserId", userId);
+            parameters.Add("@Date", date.Date);
+            parameters.Add("@CheckIn", checkIn);
+            parameters.Add("@CheckOut", checkOut);
+            parameters.Add("@Status", status);
+            parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            connection.Execute("MarkAttendance", parameters, commandType: CommandType.StoredProcedure);
+            return parameters.Get<int>("@Result");
+        }
+
+        public List<Attendance> GetAttendanceRecords(int userId, DateTime? dateFilter = null)
+        {
+            using var connection = _context.CreateConnection();
+            var query = "SELECT * FROM Attendance WHERE UserId = @UserId";
+            if (dateFilter.HasValue)
+            {
+                query += " AND Date = @Date";
+                return connection.Query<Attendance>(query, new { UserId = userId, Date = dateFilter.Value.Date }).AsList();
+            }
+
+            return connection.Query<Attendance>(query, new { UserId = userId }).AsList();
+        }
+
+        public async Task<List<AttendanceViewModel>> GetWeeklyAttendance(int userId, DateTime startDate, DateTime endDate)
+        {
+            var result = new List<AttendanceViewModel>();
+            using (var connection = _context.CreateConnection())
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@UserId", userId);
+                parameters.Add("@StartDate", startDate);
+                parameters.Add("@EndDate", endDate);
+
+                var data = await connection.QueryAsync<AttendanceViewModel>(
+                    "GetWeeklyAttendance",
+                    parameters,
+                    commandType: CommandType.StoredProcedure
+                ).ConfigureAwait(false);
+
+                result = data.ToList();
+            }
+
+            return result;
+        }
+
+        public async Task<List<AttendanceViewModel>> GetAttendanceByDateAsync(DateTime selectedDate)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                string procedure = "GetAttendanceByDate";
+                var parameters = new { SelectedDate = selectedDate.Date };
+
+                var result = await connection.QueryAsync<AttendanceViewModel>(
+                    procedure,
+                    parameters,
+                    commandType: CommandType.StoredProcedure
+                ).ConfigureAwait(false);
+
+                return result.ToList();
+            }
+        }
+
+
     }
 }
