@@ -77,8 +77,7 @@ namespace Performance_Board_System.Controllers
                     FullName = record?.FullName ?? "-",
                     CheckInTime = string.IsNullOrWhiteSpace(record?.CheckInTime) ? "-" : record.CheckInTime,
                     CheckOutTime = string.IsNullOrWhiteSpace(record?.CheckOutTime) ? "-" : record.CheckOutTime,
-
-                    Status = record?.Status ?? "Absent"
+                    Status = string.IsNullOrWhiteSpace(record?.Status) ? "-" : record.Status,
                 };
             }).ToList();
 

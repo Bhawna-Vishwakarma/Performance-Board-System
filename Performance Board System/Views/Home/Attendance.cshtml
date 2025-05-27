@@ -142,9 +142,13 @@
 									{
 										<span class="badge bg-primary">Remote</span>
 									}
-									else
+									else if (item.Status == "Absent")
 									{
 										<span class="badge bg-danger">Absent</span>
+									}
+									else
+									{
+										<span class="">-</span>
 									}
 								</td>
 							</tr>
@@ -162,7 +166,7 @@
 					<div class="card-body p-4">
 						<h3 class="text-center mb-4">🕒 Mark Your Attendance</h3>
 
-						<form asp-action="Attendance" method="post" id="attendanceForm">
+						<form asp-action="MarkAttendance" method="post" id="attendanceForm">
 							<input type="hidden" name="ActionType" id="actionType" />
 							<input type="hidden" name="CheckInTime" id="checkInTime" />
 							<input type="hidden" name="CheckOutTime" id="checkOutTime" />
