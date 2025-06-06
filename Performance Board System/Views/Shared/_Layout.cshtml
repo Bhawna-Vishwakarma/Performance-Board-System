@@ -2,6 +2,8 @@
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
     var isAuthPage = (currentController == "Account" && (currentAction == "Login" || currentAction == "SignUp"));
+    var userRole = Context.Session.GetInt32("UserRole");
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -47,29 +49,85 @@
         @if (!isAuthPage)
         {
             <!-- Sidebar -->
-            <div class="text-white p-3" id="sidebar">
-                <h4 class="mb-4">Performance Board</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Rating" ? "active" : "")" asp-controller="Home" asp-action="Rating">My Ratings <i class="bi bi-star-fill me-1"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Feedback" ? "active" : "")" asp-controller="Home" asp-action="Feedback">Feedback</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Attendance" ? "active" : "")" asp-controller="Home" asp-action="Attendance">Attendance</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(currentController == "Home" && currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white @(currentController == "Account" && currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">Logout</a>
-                    </li>
-                </ul>
-            </div>
+            @if (userRole == 1)
+            {
+                <div class="text-white p-3" id="sidebar">
+                    <h5 class="mb-4">Admin Dashboard</h5>
+
+                    <ul class="nav flex-column">
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" asp-controller="Admin" asp-action="AdminDashboard">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" asp-controller="Admin" asp-action="DepartmentList">
+                                <i class="bi bi-diagram-3"></i> Departments
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" asp-controller="Admin" asp-action="DesignationList">
+                                <i class="bi bi-person-badge"></i> Designations
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" asp-controller="Admin" asp-action="RoleList">
+                                <i class="bi bi-person-check"></i> Roles
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" asp-controller="Admin" asp-action="RatingList">
+                                <i class="bi bi-star-half"></i> Rating Master
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" asp-controller="Admin" asp-action="AttendanceStatusList">
+                                <i class="bi bi-calendar-check"></i> Attendance Status
+                            </a>
+                        </li>
+
+                        <li class="nav-item mt-4 border-top pt-3">
+                            <a class="nav-link text-white" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+            }
+            @if (userRole == 3)
+            {
+                <div class="text-white p-3" id="sidebar">
+                    <h4 class="mb-4">Performance Board</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Rating" ? "active" : "")" asp-controller="Home" asp-action="Rating">My Ratings <i class="bi bi-star-fill me-1"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Feedback" ? "active" : "")" asp-controller="Home" asp-action="Feedback">Feedback</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Attendance" ? "active" : "")" asp-controller="Home" asp-action="Attendance">Attendance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentController == "Account" && currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            }
         }
         <main role="main">
             @RenderBody()

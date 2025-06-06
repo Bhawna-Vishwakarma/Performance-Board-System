@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var messageType = TempData["MessageType"] as string;
+    var message = TempData["Message"] as string;
+    var userName = Context.Session.GetString("UserFullName");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userRole = Context.Session.GetString("UserRole");
+}
+
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h1>Manager Dashboard </h1>
+    </div>
+</div>

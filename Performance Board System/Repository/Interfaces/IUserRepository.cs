@@ -9,6 +9,10 @@ namespace Performance_Board_System.Repository.Interfaces
 
         Task<User?> GetUserByEmail(string email);
 
+        public Task<IEnumerable<Department>> GetAllDepartment();
+        
+        public Task<IEnumerable<Designation>> GetAllDesignation();
+
         int MarkAttendance(int userId, DateTime date, TimeSpan? checkIn, TimeSpan? checkOut, string status);
         List<Attendance> GetAttendanceRecords(int userId, DateTime? dateFilter = null);
 

@@ -1,0 +1,22 @@
+﻿@model AttendanceStatusMaster
+@{
+	ViewData["Title"] = "Create Attendance Status";
+}
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-3" id="mainContent">
+		<h3>@ViewData["Title"]</h3>
+		<form asp-controller="Admin" asp-action="CreateAttendanceStatus" method="post">
+			<div class="form-group accept-policy mb-2">
+				<label class="my-2" asp-for="StatusName"></label>
+				<input asp-for="StatusName" class="form-control" required />
+				<span asp-validation-for="StatusName" class="text-danger"></span>
+			</div>
+
+			<button type="submit" class="btn btn-success">Save</button>
+			<a asp-action="AttendanceStatusList" class="btn btn-secondary">Cancel</a>
+		</form>
+	</div>
+</div>
+
+

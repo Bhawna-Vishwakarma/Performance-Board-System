@@ -7,12 +7,19 @@
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+.add-new-btn{
+    background-color: salmon;
+    color: white;
+}
 .bg-primary {
     background-color: #326a98 !important;
 }
+.border-primary {
+    border-color: #eebf34 !important;
+}
 /*Login and SignUp Styles.*/
 .signup-container {
-    margin-top: 100px;
+    margin-top: 50px;
     width: 500px;
 }
 

@@ -13,9 +13,8 @@ namespace Performance_Board_System.Repository.Implementations
     public class UserRepository : IUserRepository
     {
         private readonly DapperContext _context;
-        public UserRepository(DapperContext context) {
-
-            // Constructor logic here
+        public UserRepository(DapperContext context) 
+        {
             _context = context;
         }
 
@@ -31,7 +30,9 @@ namespace Performance_Board_System.Repository.Implementations
                     parameters.Add("@FullName", user.FullName);
                     parameters.Add("@Email", user.Email);
                     parameters.Add("@PasswordHash", user.PasswordHash);
-                    parameters.Add("@Role", user.Role);
+                    parameters.Add("@DepartmentID", user.DepartmentID);
+                    parameters.Add("@DesignationId", user.DesignationId);
+                    parameters.Add("@RoleId", 3);
                     parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                     await connection.ExecuteAsync("RegisterUser", parameters, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
@@ -64,8 +65,20 @@ namespace Performance_Board_System.Repository.Implementations
         {
             using var connection = _context.CreateConnection();
             return await connection.QueryFirstOrDefaultAsync<User>(
-                "SELECT Id, FullName, Email, Role FROM Users WHERE Email = @Email",
+                "SELECT UserId, FullName, Email, RoleId FROM [User] WHERE Email = @Email",
                 new { Email = email }).ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Department>> GetAllDepartment()
+        {
+            using var connection = _context.CreateConnection();
+            return await connection.QueryAsync<Department>("SELECT DepartmentID,DepartmentName FROM [Department]").ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Designation>> GetAllDesignation()
+        {
+            using var connection = _context.CreateConnection();
+            return await connection.QueryAsync<Designation>("SELECT DesignationId, Title FROM Designation").ConfigureAwait(false);
         }
 
         public int MarkAttendance(int userId, DateTime date, TimeSpan? checkIn, TimeSpan? checkOut, string status)

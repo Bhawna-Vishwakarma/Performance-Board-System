@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-	var messageType = TempData["MessageType"] as string;
-	var message = TempData["Message"] as string;
+
     var userName = Context.Session.GetString("UserFullName");
     var userEmail = Context.Session.GetString("UserEmail");
     var userRole = Context.Session.GetString("UserRole");

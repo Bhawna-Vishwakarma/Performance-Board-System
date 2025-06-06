@@ -1,0 +1,25 @@
+﻿@model Rating
+@{
+	ViewData["Title"] = "Create Rating";
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-3" id="mainContent">
+		<h3>@ViewData["Title"]</h3>
+		<form asp-controller="Admin" asp-action="CreateRating" method="post">
+			<div class="form-group mb-2">
+				<label class="my-2" asp-for="RatingLabel"></label>
+				<input asp-for="RatingLabel" class="form-control" required />
+				<span asp-validation-for="RatingLabel" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-2">
+				<label class="my-2" asp-for="RatingScore"></label>
+				<input asp-for="RatingScore" class="form-control" required />
+				<span asp-validation-for="RatingScore" class="text-danger"></span>
+			</div>
+			<button type="submit" class="btn btn-success">Save</button>
+			<a asp-action="RatingList" class="btn btn-secondary">Cancel</a>
+		</form>
+	</div>
+</div>

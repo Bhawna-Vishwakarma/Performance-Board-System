@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Performance_Board_System.DBContext;
 using Performance_Board_System.Models;
 using Performance_Board_System.Repository.Interfaces;
 using System.Reflection;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
 namespace Performance_Board_System.Controllers
 {
@@ -29,8 +30,12 @@ namespace Performance_Board_System.Controllers
 
         [HttpGet]
         [Route("signup")]
-        public IActionResult SignUp()
+        public async Task<IActionResult> SignUp()
         {
+            var departments = await _userRepository.GetAllDepartment().ConfigureAwait(false);
+            ViewBag.Departments = new SelectList(departments, "DepartmentID", "DepartmentName");
+            var designations = await _userRepository.GetAllDesignation().ConfigureAwait(false);
+            ViewBag.Designations = new SelectList(designations, "DesignationId", "Title");
             return View();
         }
 
@@ -101,13 +106,35 @@ namespace Performance_Board_System.Controllers
                             // Store essential user info in session
                             HttpContext.Session.SetString("UserFullName", user.FullName);
                             HttpContext.Session.SetString("UserEmail", user.Email);
-                            HttpContext.Session.SetString("UserId", user.Id.ToString());
-                            HttpContext.Session.SetString("UserRole", user.Role);
+                            HttpContext.Session.SetString("UserId", user.UserId.ToString());
+                            
+                        HttpContext.Session.SetInt32("UserRole", user.RoleId);
                         }
 
                         TempData["Message"] = "Login successful!";
                         TempData["MessageType"] = "success";
-                        return Redirect("dashboard");
+                        //if(HttpContext.Session.GetInt32("UserRole") == 1) 
+                        //{
+                        //    return RedirectToAction("AdminDashboard", "Admin");
+                        //}
+                        //else if (HttpContext.Session.GetInt32("UserRole") == 2)
+                        //{
+                        //    return RedirectToAction("ManagerDashboard", "Manager");
+                        //}
+                        //else if (HttpContext.Session.GetInt32("UserRole") == 3)
+                        //{
+                        //    return RedirectToAction("EmployeeDashboard", "Employee");
+                        //}
+                        int? roleId = HttpContext.Session.GetInt32("UserRole");
+
+                        return roleId switch
+                        {
+                            1 => RedirectToAction("AdminDashboard", "Admin"),
+                            2 => RedirectToAction("ManagerDashboard", "Manager"),
+                            3 => RedirectToAction("EmployeeDashboard", "Employee"),
+                            _ => RedirectToAction("Login", "Account")
+                        };
+                        break;
 
                     case -1:
                         ModelState.AddModelError("", "Your account is inactive.");
@@ -128,7 +155,7 @@ namespace Performance_Board_System.Controllers
                         break;
                 }
 
-            // Ensure a return statement for all code paths
+            // return statement for all code paths
             return View();
         }
 

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Designation>
+@{
+    ViewData["Title"] = "Admin Dashboard ";
+    // var userName = Context.Session.GetString("UserFullName");
+    // var userEmail = Context.Session.GetString("UserEmail");
+    // var userRole = Context.Session.GetString("UserRole");
+    int count = 1;
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h4>Designation List</h4>
+        <a asp-action="CreateDesignation" class="btn add-new-btn text-white my-2">Add New</a>
+        <table class="table table-bordered border-primary bg-light">
+            <thead class="bg-primary text-white">
+                <tr><th>ID</th><th>Name</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var designation in Model)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@designation.Title</td>
+                        <td>
+                            <a asp-action="EditDesignation" asp-route-id="@designation.DesignationId" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                            <form asp-action="DeleteDesignation" asp-route-id="@designation.DesignationId" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(`Are you sure want to Delete @designation.Title?`)"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("_ToasterNotification")

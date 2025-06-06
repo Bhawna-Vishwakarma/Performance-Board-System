@@ -7,6 +7,12 @@ builder.Services.AddControllersWithViews();
 //Configure Dependency Injection
 builder.Services.AddSingleton<Performance_Board_System.DBContext.DapperContext>();
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IUserRepository, Performance_Board_System.Repository.Implementations.UserRepository>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IDepartmentRepository, Performance_Board_System.Repository.Implementations.DepartmentRepository>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IDesignationRepository, Performance_Board_System.Repository.Implementations.DesignationRepository>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRoleRepository, Performance_Board_System.Repository.Implementations.RoleRepository>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRatingRepository, Performance_Board_System.Repository.Implementations.RatingRepository>();
+builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IAttendanceStatusRepository, Performance_Board_System.Repository.Implementations.AttendanceStatusRepository>();
+
 //Added for session
 builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

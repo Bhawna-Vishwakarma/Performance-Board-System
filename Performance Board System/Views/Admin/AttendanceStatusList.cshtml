@@ -1,0 +1,42 @@
+﻿@model IEnumerable<AttendanceStatusMaster>
+
+@{
+	ViewData["Title"] = "Attendance Status List";
+	// var userName = Context.Session.GetString("UserFullName");
+	// var userEmail = Context.Session.GetString("UserEmail");
+	// var userRole = Context.Session.GetString("UserRole");
+	int count = 1;
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-3" id="mainContent">
+		<h4>Attendance Status List</h4>
+		<a asp-action="CreateAttendanceStatus" class="btn add-new-btn text-white my-2">Add New</a>
+		<table class="table table-bordered border-primary bg-light">
+			<thead class="bg-primary text-white">
+				<tr><th>ID</th><th>Status Name</th><th>Actions</th></tr>
+			</thead>
+			<tbody>
+				@foreach (var status in Model)
+				{
+					<tr>
+						<td>@count</td>
+						<td>@status.StatusName</td>
+						<td>
+							<a asp-action="EditAttendanceStatus" asp-route-id="@status.StatusId" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+							<form asp-action="DeleteAttendanceStatus" asp-route-id="@status.StatusId" method="post" style="display:inline">
+								<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(`Are you sure want to Delete @status.StatusName?`)"><i class="bi bi-trash"></i></button>
+							</form>
+						</td>
+					</tr>
+					count++;
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@await Html.PartialAsync("_ToasterNotification")
+
+
