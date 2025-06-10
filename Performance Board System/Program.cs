@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Performance_Board_System.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,19 @@ builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRatin
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IAttendanceStatusRepository, Performance_Board_System.Repository.Implementations.AttendanceStatusRepository>();
 
 //Added for session
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/login";
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = context =>
@@ -40,25 +49,51 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseSession();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated)
+    {
+        if (string.IsNullOrEmpty(context.Session.GetString("UserEmail")))
+        {
+            var email = context.User.Identity.Name;
+
+            // You can access your repository via scoped service
+            var userRepo = context.RequestServices.GetRequiredService<IUserRepository>();
+            var user = await userRepo.GetUserByEmail(email.ToLower());
+
+            if (user != null)
+            {
+                context.Session.SetString("UserFullName", user.FullName);
+                context.Session.SetString("UserEmail", user.Email);
+                context.Session.SetString("UserId", user.UserId.ToString());
+                context.Session.SetInt32("UserRole", user.RoleId);
+            }
+        }
+    }
+
+    await next();
+});
+
+
+
 app.MapGet("/", context =>
 {
-    context.Response.Redirect("/signup");
+    context.Response.Redirect("/login");
     return Task.CompletedTask;
 });
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=SignUp}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

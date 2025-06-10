@@ -29,23 +29,58 @@ namespace Performance_Board_System.Repository.Implementations
         public async Task<int> AddAsync(Rating rating)
         {
             using var connection = _context.CreateConnection();
-            var query = "INSERT INTO Rating (RatingLabel, RatingScore) VALUES (@RatingLabel, @RatingScore)";
-            return await connection.ExecuteAsync(query, rating).ConfigureAwait(false);
+            //var query = "INSERT INTO Rating (RatingLabel, RatingScore) VALUES (@RatingLabel, @RatingScore)";
+            //return await connection.ExecuteAsync(query, rating).ConfigureAwait(false);
+            try{
+                var parameter = new DynamicParameters();
+                parameter.Add("@RatingLabel", rating.RatingLabel);
+                parameter.Add("@RatingScore", rating.RatingScore);
+                parameter.Add("@Result", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+                await connection.ExecuteAsync("SP_InsertRatings", parameter, commandType: System.Data.CommandType.StoredProcedure);
+                return parameter.Get<int>("@Result"); 
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error in insert Rating: " + ex.Message);
+                return 0;
+            }
         }
 
 
         public async Task<int> UpdateAsync(Rating rating)
         {
             using var connection = _context.CreateConnection();
-            var query = "UPDATE Rating SET RatingLabel = @RatingLabel, RatingScore = @RatingScore WHERE RatingId = @RatingId";
-            return await connection.ExecuteAsync(query, rating).ConfigureAwait(false);
+            //var query = "UPDATE Rating SET RatingLabel = @RatingLabel, RatingScore = @RatingScore WHERE RatingId = @RatingId";
+            //return await connection.ExecuteAsync(query, rating).ConfigureAwait(false);
+            try
+            {
+                var parameter = new DynamicParameters();
+                parameter.Add("@RatingID", rating.RatingId);
+                parameter.Add("@RatingLabel", rating.RatingLabel);
+                parameter.Add("@RatingScore", rating.RatingScore);
+                parameter.Add("@Result", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+                await connection.ExecuteAsync("SP_UpdateRating", parameter, commandType: System.Data.CommandType.StoredProcedure);
+                return parameter.Get<int>("@Result");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error in Update Rating" + ex.Message);
+                return 0;
+            }
         }
 
         public async Task<int> DeleteAsync(int id)
         {
             using var connection = _context.CreateConnection();
-            return await connection.ExecuteAsync("DELETE FROM Rating WHERE RatingId = @Id", new { Id = id }).ConfigureAwait(false);
+            //return await connection.ExecuteAsync("DELETE FROM Rating WHERE RatingId = @Id", new { Id = id }).ConfigureAwait(false);
+            var parameter = new DynamicParameters();
+            parameter.Add("@RatingID", id);
+            parameter.Add("@Result", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
 
+            await connection.ExecuteAsync("SP_DeleteRatings", parameter, commandType: System.Data.CommandType.StoredProcedure);
+            return parameter.Get<int>("@Result");
         }
     }
 }

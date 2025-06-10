@@ -22,6 +22,7 @@ namespace Performance_Board_System.Controllers
             _userRepository = userRepository;
         }
 
+        [HttpGet]
         [Route("login")]
         public IActionResult Login()
         {
@@ -56,6 +57,11 @@ namespace Performance_Board_System.Controllers
                 else if (result == -1)
                 {
                     TempData["Message"] = "User already exists!";
+                    TempData["MessageType"] = "warning";
+                }
+                else if (result == -2)
+                {
+                    TempData["Message"] = "User is not active!";
                     TempData["MessageType"] = "warning";
                 }
                 else
@@ -113,18 +119,6 @@ namespace Performance_Board_System.Controllers
 
                         TempData["Message"] = "Login successful!";
                         TempData["MessageType"] = "success";
-                        //if(HttpContext.Session.GetInt32("UserRole") == 1) 
-                        //{
-                        //    return RedirectToAction("AdminDashboard", "Admin");
-                        //}
-                        //else if (HttpContext.Session.GetInt32("UserRole") == 2)
-                        //{
-                        //    return RedirectToAction("ManagerDashboard", "Manager");
-                        //}
-                        //else if (HttpContext.Session.GetInt32("UserRole") == 3)
-                        //{
-                        //    return RedirectToAction("EmployeeDashboard", "Employee");
-                        //}
                         int? roleId = HttpContext.Session.GetInt32("UserRole");
 
                         return roleId switch

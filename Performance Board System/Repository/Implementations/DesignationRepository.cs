@@ -2,6 +2,7 @@
 using Performance_Board_System.DBContext;
 using Performance_Board_System.Models;
 using Performance_Board_System.Repository.Interfaces;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace Performance_Board_System.Repository.Implementations
@@ -38,7 +39,7 @@ namespace Performance_Board_System.Repository.Implementations
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error in RegisterUser: " + ex.Message);
+                    Console.WriteLine("Error in insert Designation: " + ex.Message);
                     return 0;
                 }
             }
@@ -46,15 +47,44 @@ namespace Performance_Board_System.Repository.Implementations
 
         public async Task<int> UpdateAsync(Designation designation)
         {
-            using var connection = _context.CreateConnection();
-            var query = "UPDATE Designation SET Title = @Title WHERE DesignationId = @DesignationId";
-            return await connection.ExecuteAsync(query, designation).ConfigureAwait(false);
+            using (var connection = _context.CreateConnection())
+            {
+                try
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@DesignationId", designation.DesignationId);
+                    parameters.Add("@Title", designation.Title);
+                    parameters.Add("@Result", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+                    await connection.ExecuteAsync("SP_UpdateDesignation", parameters, commandType: System.Data.CommandType.StoredProcedure).ConfigureAwait(false);
+                    return parameters.Get<int>("@Result");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in Update Designation: " + ex.Message);
+                    return 0;
+                }
+            }
         }
 
         public async Task<int> DeleteAsync(int id)
         {
             using var connection = _context.CreateConnection();
-            return await connection.ExecuteAsync("DELETE FROM Designation WHERE DesignationId = @Id", new { Id = id }).ConfigureAwait(false);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@DesignationId", id);
+            parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            await connection.ExecuteAsync("SP_DeleteDesignation", parameters, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+
+            return parameters.Get<int>("@Result");
         }
+
+
+        //public async Task<int> DeleteAsync(int id)
+        //{
+        //    using var connection = _context.CreateConnection();
+        //    return await connection.ExecuteAsync("DELETE FROM Designation WHERE DesignationId = @Id", new { Id = id }).ConfigureAwait(false);
+        //}
     }
 }
