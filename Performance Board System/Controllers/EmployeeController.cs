@@ -41,7 +41,7 @@ namespace Performance_Board_System.Controllers
             }
         }
 
-        [HttpGet("attendance")]
+        [Route("attendance")]
         public async Task<IActionResult> Attendance()
         {
             //int userId = HttpContext.Session.GetInt32("UserId") ?? 0;
@@ -70,6 +70,45 @@ namespace Performance_Board_System.Controllers
             return View(viewModel);
             //return View(records);
         }
+
+        [Route("attendance-record")]
+        public async Task<IActionResult> Attendance(DateTime? startDate, DateTime? endDate)
+        {
+            int userId = GetLoggedInUserId();
+
+            // Default to current week if not filtered
+            DateTime defaultStart = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1); // Monday
+            DateTime defaultEnd = defaultStart.AddDays(4); // Friday
+
+            DateTime from = startDate ?? defaultStart;
+            DateTime to = endDate ?? defaultEnd;
+
+            var records = await _attendanceRepo.GetAttendanceForUserInDateRange(userId, from, to);
+
+            // Ensure full range is shown (even if days have no attendance)
+            var allDates = Enumerable.Range(0, (to - from).Days + 1)
+                                      .Select(i => from.AddDays(i))
+                                      .Where(d => d.DayOfWeek != DayOfWeek.Sunday)
+                                      .ToList();
+
+            var viewModel = allDates.Select(date =>
+            {
+                var record = records.FirstOrDefault(r => r.Date.Date == date.Date);
+                return new WeeklyAttendanceViewModel
+                {
+                    Date = date,
+                    CheckInTime = record?.CheckInTime,
+                    CheckOutTime = record?.CheckOutTime,
+                    StatusName = record?.StatusName,
+                    Remarks = record?.Remarks,
+                    IsToday = date.Date == DateTime.Today,
+                    IsCheckedIn = record != null && record.CheckInTime.HasValue
+                };
+            }).ToList();
+
+            return View(viewModel);
+        }
+
 
         [HttpGet("attendance/checkin")]
         public async Task<IActionResult> CheckIn()

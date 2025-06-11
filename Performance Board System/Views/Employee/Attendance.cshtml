@@ -4,6 +4,21 @@
     <!-- Main Content -->
     <div class="mainContent p-3" id="mainContent">
         <h3>Mark Your Attendance</h3>
+        <form action ="/attendance-record" method="get" class="row g-2 mb-4">
+            <div class="col-md-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" name="startDate" value="@(Context.Request.Query["endDate"])" />
+            </div>
+            <div class="col-md-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" class="form-control" name="endDate" value="@(Context.Request.Query["endDate"])" />
+            </div>
+            <div class="col-md-3 align-self-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                @* <button type="button" class="btn btn-secondary ms-2" onclick="clearDateFilters()">Reset</button> *@
+                <a href="@Url.Action("Attendance", "Employee")" class="btn btn-secondary ms-2">Reset</a>
+            </div>
+        </form>
         <table class="table table-bordered table-hover align-middle text-center">
             <thead class="bg-primary text-white">
                 <tr>
@@ -50,3 +65,10 @@
         </table>
     </div>
 </div>
+
+<script>
+    // function clearDateFilters() {
+    //     document.querySelector('input[name="startDate"]').value = "";
+    //     document.querySelector('input[name="endDate"]').value = "";
+    // }
+</script>
