@@ -116,26 +116,6 @@ namespace Performance_Board_System.Repository.Implementations
         #endregion
 
 
-        #region Get All Department Method
-
-        public async Task<IEnumerable<Department>> GetAllDepartment()
-        {
-            using var connection = _context.CreateConnection();
-            return await connection.QueryAsync<Department>("SELECT DepartmentID,DepartmentName FROM [Department]").ConfigureAwait(false);
-        }
-        #endregion
-
-
-        #region Get All Designation Method
-
-        public async Task<IEnumerable<Designation>> GetAllDesignation()
-        {
-            using var connection = _context.CreateConnection();
-            return await connection.QueryAsync<Designation>("SELECT DesignationId, Title FROM Designation").ConfigureAwait(false);
-        }
-        #endregion
-
-
         #region Update User Roles Method
         
         public async Task<int> UpdateUserRoleAsync(User user)
@@ -170,6 +150,7 @@ namespace Performance_Board_System.Repository.Implementations
 
         #endregion
 
+
         #region Add User Method
 
         public async Task<int> AddUser(int userId)
@@ -181,84 +162,111 @@ namespace Performance_Board_System.Repository.Implementations
 
         #endregion
 
-        #region Mark Attendance Method
-        public int MarkAttendance(int userId, DateTime date, TimeSpan? checkIn, TimeSpan? checkOut, string status)
-        {
-            using var connection = _context.CreateConnection();
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId);
-            parameters.Add("@Date", date.Date);
-            parameters.Add("@CheckIn", checkIn);
-            parameters.Add("@CheckOut", checkOut);
-            parameters.Add("@Status", status);
-            parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-            connection.Execute("MarkAttendance", parameters, commandType: CommandType.StoredProcedure);
-            return parameters.Get<int>("@Result");
-        }
+
+
+
+
+
+
+        #region Get All Department Method
+
+        //public async Task<IEnumerable<Department>> GetAllDepartment()
+        //{
+        //    using var connection = _context.CreateConnection();
+        //    return await connection.QueryAsync<Department>("SELECT DepartmentID,DepartmentName FROM [Department]").ConfigureAwait(false);
+        //}
+        #endregion
+
+
+        #region Get All Designation Method
+
+        //public async Task<IEnumerable<Designation>> GetAllDesignation()
+        //{
+        //    using var connection = _context.CreateConnection();
+        //    return await connection.QueryAsync<Designation>("SELECT DesignationId, Title FROM Designation").ConfigureAwait(false);
+        //}
+        #endregion
+
+
+        #region Mark Attendance Method
+        //public int MarkAttendance(int userId, DateTime date, TimeSpan? checkIn, TimeSpan? checkOut, string status)
+        //{
+        //    using var connection = _context.CreateConnection();
+        //    var parameters = new DynamicParameters();
+        //    parameters.Add("@UserId", userId);
+        //    parameters.Add("@Date", date.Date);
+        //    parameters.Add("@CheckIn", checkIn);
+        //    parameters.Add("@CheckOut", checkOut);
+        //    parameters.Add("@Status", status);
+        //    parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+        //    connection.Execute("MarkAttendance", parameters, commandType: CommandType.StoredProcedure);
+        //    return parameters.Get<int>("@Result");
+        //}
         #endregion
 
 
         #region Attendance Record Method 
-        public List<Attendance> GetAttendanceRecords(int userId, DateTime? dateFilter = null)
-        {
-            using var connection = _context.CreateConnection();
-            var query = "SELECT * FROM Attendance WHERE UserId = @UserId";
-            if (dateFilter.HasValue)
-            {
-                query += " AND Date = @Date";
-                return connection.Query<Attendance>(query, new { UserId = userId, Date = dateFilter.Value.Date }).AsList();
-            }
+        //public List<Attendance> GetAttendanceRecords(int userId, DateTime? dateFilter = null)
+        //{
+        //    using var connection = _context.CreateConnection();
+        //    var query = "SELECT * FROM Attendance WHERE UserId = @UserId";
+        //    if (dateFilter.HasValue)
+        //    {
+        //        query += " AND Date = @Date";
+        //        return connection.Query<Attendance>(query, new { UserId = userId, Date = dateFilter.Value.Date }).AsList();
+        //    }
 
-            return connection.Query<Attendance>(query, new { UserId = userId }).AsList();
-        }
+        //    return connection.Query<Attendance>(query, new { UserId = userId }).AsList();
+        //}
 
         #endregion
 
 
         #region Get Weekly Attendance Method
 
-        public async Task<List<AttendanceViewModel>> GetWeeklyAttendance(int userId, DateTime startDate, DateTime endDate)
-        {
-            var result = new List<AttendanceViewModel>();
-            using (var connection = _context.CreateConnection())
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@UserId", userId);
-                parameters.Add("@StartDate", startDate);
-                parameters.Add("@EndDate", endDate);
+        //public async Task<List<AttendanceViewModel>> GetWeeklyAttendance(int userId, DateTime startDate, DateTime endDate)
+        //{
+        //    var result = new List<AttendanceViewModel>();
+        //    using (var connection = _context.CreateConnection())
+        //    {
+        //        var parameters = new DynamicParameters();
+        //        parameters.Add("@UserId", userId);
+        //        parameters.Add("@StartDate", startDate);
+        //        parameters.Add("@EndDate", endDate);
 
-                var data = await connection.QueryAsync<AttendanceViewModel>(
-                    "GetWeeklyAttendance",
-                    parameters,
-                    commandType: CommandType.StoredProcedure
-                ).ConfigureAwait(false);
+        //        var data = await connection.QueryAsync<AttendanceViewModel>(
+        //            "GetWeeklyAttendance",
+        //            parameters,
+        //            commandType: CommandType.StoredProcedure
+        //        ).ConfigureAwait(false);
 
-                result = data.ToList();
-            }
+        //        result = data.ToList();
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
         #endregion
 
 
         #region Get Attenance By Date Method
-        public async Task<List<AttendanceViewModel>> GetAttendanceByDateAsync(DateTime selectedDate)
-        {
-            using (var connection = _context.CreateConnection())
-            {
-                string procedure = "GetAttendanceByDate";
-                var parameters = new { SelectedDate = selectedDate.Date };
+        //public async Task<List<AttendanceViewModel>> GetAttendanceByDateAsync(DateTime selectedDate)
+        //{
+        //    using (var connection = _context.CreateConnection())
+        //    {
+        //        string procedure = "GetAttendanceByDate";
+        //        var parameters = new { SelectedDate = selectedDate.Date };
 
-                var result = await connection.QueryAsync<AttendanceViewModel>(
-                    procedure,
-                    parameters,
-                    commandType: CommandType.StoredProcedure
-                ).ConfigureAwait(false);
+        //        var result = await connection.QueryAsync<AttendanceViewModel>(
+        //            procedure,
+        //            parameters,
+        //            commandType: CommandType.StoredProcedure
+        //        ).ConfigureAwait(false);
 
-                return result.ToList();
-            }
-        }
+        //        return result.ToList();
+        //    }
+        //}
         #endregion
 
     }

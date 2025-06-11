@@ -13,15 +13,29 @@ namespace Performance_Board_System.Controllers
 {
     public class AccountController : Controller
     {
+        #region Private Properties
+
         private readonly DapperContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _deptRepo;
+        private readonly IDesignationRepository _designationRepo;
 
-        public AccountController(DapperContext context, IUserRepository userRepository)
+        #endregion
+
+
+        #region Constructor Method
+        public AccountController(DapperContext context, IUserRepository userRepository, IDepartmentRepository deptRepo, IDesignationRepository designationRepo)
         {
             _context = context;
             _userRepository = userRepository;
+            _deptRepo = deptRepo;
+            _designationRepo = designationRepo;
         }
 
+        #endregion
+
+
+        #region public login Get Method 
         [HttpGet]
         [Route("login")]
         public IActionResult Login()
@@ -29,16 +43,26 @@ namespace Performance_Board_System.Controllers
             return View();
         }
 
+        #endregion
+
+
+        #region public signup Get Method
+
         [HttpGet]
         [Route("signup")]
         public async Task<IActionResult> SignUp()
         {
-            var departments = await _userRepository.GetAllDepartment().ConfigureAwait(false);
+            var departments = await _deptRepo.GetAllAsync().ConfigureAwait(false);
             ViewBag.Departments = new SelectList(departments, "DepartmentID", "DepartmentName");
-            var designations = await _userRepository.GetAllDesignation().ConfigureAwait(false);
+            var designations = await _designationRepo.GetAllAsync().ConfigureAwait(false);
             ViewBag.Designations = new SelectList(designations, "DesignationId", "Title");
             return View();
         }
+
+        #endregion
+
+
+        #region Public Post signup Method
 
         [HttpPost]
         [Route("signup")]
@@ -73,7 +97,10 @@ namespace Performance_Board_System.Controllers
 
             return View(user); // Return with validation messages or error toast
         }
+        #endregion
 
+
+        #region Public Post Login Method
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(string email, string password)
@@ -128,7 +155,7 @@ namespace Performance_Board_System.Controllers
                             3 => RedirectToAction("EmployeeDashboard", "Employee"),
                             _ => RedirectToAction("Login", "Account")
                         };
-                        break;
+                        //break;
 
                     case -1:
                         ModelState.AddModelError("", "Your account is inactive.");
@@ -153,6 +180,11 @@ namespace Performance_Board_System.Controllers
             return View();
         }
 
+        #endregion
+
+
+        #region public Get  logout Method
+
         [HttpGet]
         [Route("logout")]
         public async Task<IActionResult> Logout()
@@ -166,6 +198,7 @@ namespace Performance_Board_System.Controllers
             TempData["MessageType"] = "success";
             return RedirectToAction("Login");
         }
-    }
+        #endregion
 
+    }
 }

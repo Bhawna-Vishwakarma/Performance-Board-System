@@ -1,0 +1,52 @@
+﻿@model List<WeeklyAttendanceViewModel>
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h3>Mark Your Attendance</h3>
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Date</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Status</th>
+                    <th>Remark</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                @foreach (var day in Model)
+                {
+                    <tr>
+                        <td>@day.Date.ToString("dddd, dd MMM")</td>
+                        <td>@day.CheckInTime</td>
+                        <td>@day.CheckOutTime</td>
+                        <td>@day.StatusName</td>
+                        <td>@day.Remarks</td>
+                        <td>
+                            @if (day.IsToday && !day.IsCheckedIn)
+                            {
+                                <a href="@Url.Action("CheckIn", "Employee")" class="btn btn-sm btn-primary">Check-In</a>
+                            }
+                            else if (day.IsToday && day.IsCheckedIn && day.CheckOutTime == null)
+                            {
+                                <form asp-action="CheckOut" asp-controller="Employee" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-warning">Check-Out</button>
+                                </form>
+                            }
+                            else if (day.IsToday && day.IsCheckedIn && day.CheckOutTime != null)
+                            {
+                                <span class="p-1 bg-success text-white rounded-2">Marked</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

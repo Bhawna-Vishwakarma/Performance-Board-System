@@ -114,7 +114,7 @@
                     <h4 class="mb-4">Performance Board</h4>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Employee" asp-action="EmployeeDashboard">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white @(currentController == "Home" && currentAction == "Rating" ? "active" : "")" asp-controller="Home" asp-action="Rating">My Ratings <i class="bi bi-star-fill me-1"></i></a>
@@ -123,7 +123,7 @@
                             <a class="nav-link text-white @(currentController == "Home" && currentAction == "Feedback" ? "active" : "")" asp-controller="Home" asp-action="Feedback">Feedback</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Attendance" ? "active" : "")" asp-controller="Home" asp-action="Attendance">Attendance</a>
+                            <a class="nav-link text-white @(currentController == "Home" && currentAction == "Attendance" ? "active" : "")" asp-controller="Employee" asp-action="Attendance">Attendance</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white @(currentController == "Home" && currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

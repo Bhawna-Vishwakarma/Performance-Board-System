@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Performance_Board_System.Repository.Implementations;
 using Performance_Board_System.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IDesig
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRoleRepository, Performance_Board_System.Repository.Implementations.RoleRepository>();
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRatingRepository, Performance_Board_System.Repository.Implementations.RatingRepository>();
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IAttendanceStatusRepository, Performance_Board_System.Repository.Implementations.AttendanceStatusRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 
 //Added for session
 builder.Services.AddSession(options =>
