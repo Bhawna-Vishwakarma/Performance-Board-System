@@ -66,7 +66,5 @@ namespace Performance_Board_System.Repository.Implementations
             var result = await connection.QueryAsync<AttendanceViewModel>(query, new { UserId = userId, Start = start, End = end });
             return result.ToList();
         }
-
-
     }
 }

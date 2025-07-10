@@ -8,24 +8,49 @@ namespace Performance_Board_System.Controllers
     public class EmployeeController : Controller
     {
         private readonly IAttendanceRepository _attendanceRepo;
+        private readonly IEvaluationRepository _evaluationRepo;
 
-        public EmployeeController(IAttendanceRepository attendanceRepository)
+        public EmployeeController(IAttendanceRepository attendanceRepository, IEvaluationRepository evaluationRepo)
         {
             _attendanceRepo = attendanceRepository;
+            _evaluationRepo = evaluationRepo;
         }
 
         [HttpGet("employee-dahboard")]
-        public IActionResult EmployeeDashboard()
+        public async Task<IActionResult> EmployeeDashboard()
         {
+            int userId = GetLoggedInUserId();
+
+            ViewBag.OverallRating = await _evaluationRepo.GetAverageRatingByUserIdAsync(userId);
+            var feedbacks = await _evaluationRepo.GetRecentFeedbacksAsync(userId);
+            ViewBag.RecentFeedbacks = feedbacks.ToList();
+
+
+            var LatestFeedbacks = await _evaluationRepo.GetLatestFeedbacksAsync();
+
+            ViewBag.LatestFeedbacks = LatestFeedbacks.OrderByDescending(e => e.EvaluationDate)
+                                .Take(5)
+                                .ToList();
+
+            var (avgScore, lastUpdated, categories) = await _evaluationRepo.GetUserRatingsAsync(userId);
+            ViewBag.RatingCategories = categories;
             return View();
         }
 
-        //[HttpGet("mark-attendance")]
-        //public async Task<IActionResult> MarkAttendance()
-        //{
-        //    ViewBag.StatusList = await _attendanceRepo.GetAllStatusesAsync();
-        //    return View();
-        //}
+        /// <summary>
+        /// Get Employee Rating.
+        /// </summary>
+        /// <returns></returns>
+        [Route("my-rating")]
+        public async Task<IActionResult> Rating()
+        {
+            int userId = GetLoggedInUserId();
+            var ratings = await _evaluationRepo.GetUserRatingsAsync(userId);
+            ViewBag.AverageScore = await _evaluationRepo.GetAverageRatingByUserIdAsync(userId);
+            ViewBag.LastUpdated = ratings.LastUpdated;
+            ViewBag.Categories = ratings.Categories; // list of category + score
+            return View();
+        }
 
         private int GetLoggedInUserId()
         {
@@ -137,12 +162,15 @@ namespace Performance_Board_System.Controllers
             }
             model.UserId = GetLoggedInUserId();
             int result = await _attendanceRepo.CheckInAsync(model);
-            TempData["Message"] = result switch
+            (var message, var type) = result switch
             {
-                1 => "Checked in successfully.",
-                -1 => "Already checked in today.",
-                _ => "Something went wrong."
+                1 => ("Checked in successfully.", "success"),
+                -1 => ("Already checked in today.", "warning"),
+                _ => ("Something went wrong.", "danger")
             };
+
+            TempData["Message"] = message;
+            TempData["MessageType"] = type;
             return RedirectToAction("Attendance");
         }
 
@@ -152,12 +180,15 @@ namespace Performance_Board_System.Controllers
             int userId = GetLoggedInUserId();
 
             int result = await _attendanceRepo.CheckOutAsync(userId);
-            TempData["Message"] = result switch
+
+            (var message, var type) = result switch
             {
-                1 => "Checked out successfully.",
-                -1 => "Check-in not found or already checked out.",
-                _ => "Something went wrong."
+                1 => ("Checked out successfully.", "success"),
+                -1 => ("Check-in not found or already checked out.", "warning"),
+                _ => ("Something went wrong.", "danger")
             };
+            TempData["Message"] = message;
+            TempData["MessageType"] = type;
             return RedirectToAction("Attendance");
         }
 

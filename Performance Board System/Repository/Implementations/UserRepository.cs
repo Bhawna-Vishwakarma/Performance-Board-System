@@ -81,7 +81,7 @@ namespace Performance_Board_System.Repository.Implementations
                 "LEFT join [Role] as r on u.RoleID = r.RoleID " +
                 "LEFT join Department as dept on dept.DepartmentID = u.DepartmentId " +
                 "LEFT join Designation as d on d.DesignationId = u.DesignationId " +
-                //"where u.IsActive =1 " + 
+                "WHERE u.RoleId NOT IN (1, 2)" +
                 "order by r.RoleId ASC;",
                 commandType: CommandType.Text).ConfigureAwait(false);
         }

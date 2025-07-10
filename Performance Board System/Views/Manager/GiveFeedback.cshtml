@@ -1,0 +1,103 @@
+﻿@model EmployeeEvaluationViewModel
+@{
+    ViewData["Title"] = "Evaluate Employee";
+}
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h2 class="mb-4">Employee Performance Evaluation</h2>
+
+        <form asp-action="GiveFeedback" method="post" class="needs-validation" novalidate>
+            <div class="row w-75 g-3">
+                <input type="hidden" asp-for="EvaluatedUserId" />
+                <!-- Evaluation Period -->
+                <div class="col-md-6">
+                    <label asp-for="EvaluationPeriodStart" class="form-label">From</label>
+                    <input asp-for="EvaluationPeriodStart" class="form-control" type="date" required />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="EvaluationPeriodEnd" class="form-label">To</label>
+                    <input asp-for="EvaluationPeriodEnd" class="form-control" type="date" required />
+                </div>
+
+                <!-- Rating Categories -->
+                <div class="col-md-6">
+                    <label asp-for="CommunicationRatingId" class="form-label">Communication</label>
+                    @* <select asp-for="CommunicationRatingId" asp-items="Model.RatingList" class="form-select" required></select> *@
+
+                    <select asp-for="CommunicationRatingId" class="form-select">
+                        <option value="0">-- Select Commnunication Rating --</option>
+                        @foreach (var rating in Model.RatingList)
+                        {
+                            <option value="@rating.RatingId">@rating.RatingLabel</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="PunctualityRatingId" class="form-label">Punctuality</label>
+                    <select asp-for="PunctualityRatingId" class="form-select">
+                        <option value="0">-- Select Punctuality Rating --</option>
+                        @foreach (var rating in Model.RatingList)
+                        {
+                            <option value="@rating.RatingId">@rating.RatingLabel</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="TeamworkRatingId" class="form-label">Teamwork</label>
+                    <select asp-for="TeamworkRatingId" class="form-select">
+                        <option value="0">-- Select Teamwork Rating --</option>
+                        @foreach (var rating in Model.RatingList)
+                        {
+                            <option value="@rating.RatingId">@rating.RatingLabel</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="TaskCompletionRatingId" class="form-label">Task Completion</label>
+                    <select asp-for="TaskCompletionRatingId" class="form-select">
+                        <option value="0">-- Select Task Completion Rating --</option>
+                        @foreach (var rating in Model.RatingList)
+                        {
+                            <option value="@rating.RatingId">@rating.RatingLabel</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="AttendanceRatingId" class="form-label">Attendance</label>
+                    <select asp-for="AttendanceRatingId" class="form-select">
+                        <option value="0">-- Select Attendance Rating --</option>
+                        @foreach (var rating in Model.RatingList)
+                        {
+                            <option value="@rating.RatingId">@rating.RatingLabel</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Comment Box -->
+                <div class="col-12">
+                    <label asp-for="Comment" class="form-label">Comments</label>
+                    <textarea asp-for="Comment" class="form-control" rows="4" placeholder="Give comment on employee performance..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn bg-primary text-white px-4">Submit Evaluation</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }

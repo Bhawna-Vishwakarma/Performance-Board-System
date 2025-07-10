@@ -45,14 +45,14 @@
             </nav>
         </header>
     } *@
-    <div class="container">
+    <div class="">
         @if (!isAuthPage)
         {
             <!-- Sidebar -->
             @if (userRole == 1)
             {
                 <div class="text-white p-3" id="sidebar">
-                    <h5 class="mb-4">Admin Dashboard</h5>
+                    <h5 class="mb-4">Performance Board System</h5>
 
                     <ul class="nav flex-column">
 
@@ -67,7 +67,6 @@
                                 <i class="bi bi-diagram-3"></i> Departments
                             </a>
                         </li>
-
                         <li class="nav-item mb-2">
                             <a class="nav-link text-white" asp-controller="Admin" asp-action="DesignationList">
                                 <i class="bi bi-person-badge"></i> Designations
@@ -94,7 +93,7 @@
 
                         <li class="nav-item mb-2">
                             <a class="nav-link text-white" asp-controller="Admin" asp-action="UserList">
-                                <i class="bi bi-calendar-check"></i> User Management
+                                <i class="bi bi-person-circle"></i> User Management
                             </a>
                         </li>
 
@@ -108,10 +107,48 @@
                 </div>
 
             }
+            @if (userRole == 2)
+            {
+                <div class="text-white p-3" id="sidebar">
+                    <h4 class="mb-4">Performance Board System</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Manager" asp-action="ManagerDashboard">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Manager" asp-action="UserList">
+                                <i class="bi bi-person-circle"></i> User Managment
+                            </a>
+                        </li>
+                        @* <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Feedback">
+                                <i class="bi bi-chat-left-text"></i> Feedback
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Employee" asp-action="Attendance">
+                                <i class="bi bi-calendar-check"></i> Attendance
+                            </a>
+                        </li> *@
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-lock"></i> Privacy
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
             @if (userRole == 3)
             {
                 <div class="text-white p-3" id="sidebar">
-                    <h4 class="mb-4">Performance Board</h4>
+                    <h4 class="mb-4">Performance Board System</h4>
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Employee" asp-action="EmployeeDashboard">
@@ -119,7 +156,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Home" asp-action="Rating">
+                            <a class="nav-link text-white" asp-controller="Employee" asp-action="Rating">
                                 <i class="bi bi-star-half"></i> My Ratings
                             </a>
                         </li>

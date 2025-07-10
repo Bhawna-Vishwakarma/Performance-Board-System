@@ -2,9 +2,11 @@
 using Performance_Board_System.Models;
 using Performance_Board_System.Repository.Implementations;
 using Performance_Board_System.Repository.Interfaces;
+using System.Linq;
 
 namespace Performance_Board_System.Controllers
 {
+    [Route("admin/[action]")]
     public class AdminController : Controller
     {
 
@@ -16,13 +18,14 @@ namespace Performance_Board_System.Controllers
         private readonly IRatingRepository _ratingRepo;
         private readonly IAttendanceStatusRepository _attendanceStatusRepo;
         private readonly IUserRepository _userRepo;
+        private readonly IEvaluationRepository _evaluationRepo;
 
         #endregion
 
 
         #region public Constructor
         public AdminController(IDepartmentRepository deptRepo, IDesignationRepository designationRepo, IRoleRepository roleRepo,
-            IRatingRepository ratingRepo, IAttendanceStatusRepository attendanceStatusRepo, IUserRepository userRepo)
+            IRatingRepository ratingRepo, IAttendanceStatusRepository attendanceStatusRepo, IUserRepository userRepo, IEvaluationRepository evaluationRepo)
         {
             _deptRepo = deptRepo;
             _designationRepo = designationRepo;
@@ -30,15 +33,33 @@ namespace Performance_Board_System.Controllers
             _ratingRepo = ratingRepo;
             _attendanceStatusRepo = attendanceStatusRepo;
             _userRepo = userRepo;
+            _evaluationRepo = evaluationRepo;
         }
         #endregion
 
 
-        #region Public Dashbord Methods
+        #region Public Get Dashbord Methods
 
         [HttpGet("admin-dashboard")]
-        public IActionResult AdminDashboard()
+        public async Task<IActionResult> AdminDashboard()
         {
+            var users = await _userRepo.GetAllActiveUsersAsync();
+            var departments = await _deptRepo.GetAllAsync();
+            var designations = await _designationRepo.GetAllAsync();
+            var roles = await _roleRepo.GetAllAsync();
+            var ratings = await _ratingRepo.GetAllAsync();
+            var attendanceStatus = await _attendanceStatusRepo.GetAllAsync();
+            var LatestFeedbacks = await _evaluationRepo.GetLatestFeedbacksAsync();
+
+            ViewBag.TotalUsers = users.Count();
+            ViewBag.TotalDepartments = departments.Count();
+            ViewBag.TotalDesignations = designations.Count();
+            ViewBag.TotalRoles = roles.Count();
+            ViewBag.TotalRatings = ratings.Count();
+            ViewBag.TotalAttendanceStatus = attendanceStatus.Count();
+            ViewBag.LatestFeedbacks = LatestFeedbacks.OrderByDescending(e => e.EvaluationDate)
+                                .Take(5)
+                                .ToList();
             return View();
         }
         #endregion
@@ -359,6 +380,9 @@ namespace Performance_Board_System.Controllers
         [HttpGet("create-attendance-status")]
         public IActionResult CreateAttendanceStatus() => View();
 
+        
+        
+        
         [HttpPost("create-attendance-status")]
 
         public async Task<IActionResult> CreateAttendanceStatus(AttendanceStatusMaster status)
@@ -376,6 +400,7 @@ namespace Performance_Board_System.Controllers
             TempData["MessageType"] = type;
             return RedirectToAction("AttendanceStatusList");
         }
+
 
         [HttpGet("edit-attendance-status")]
         public async Task<IActionResult> EditAttendanceStatus(int id)
@@ -523,17 +548,43 @@ namespace Performance_Board_System.Controllers
         #endregion
 
 
-        #region Add User Method
+        #region Add User Method For activate user
 
         [HttpPost("add-user")]
         public async Task<IActionResult> AddUser(int id)
         { 
             var result = await _userRepo.AddUser(id).ConfigureAwait(false);
-            TempData["Message"] = "User Added Successfully";
+            TempData["Message"] = "User Activated Successfully";
             TempData["MessageType"] = "success";
             return RedirectToAction("UserList");
 
         }
+        #endregion
+
+
+        #region Get Method for FeedbackList
+        public async Task<IActionResult> FeedbackList(int userId)
+        {
+            var evaluations = await _evaluationRepo.GetEvaluationsByUserIdAsync(userId);
+            ViewBag.UserId = userId;
+            return View(evaluations);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteFeedback(int id, int evaluatedUserId)
+        {
+            var result = await _evaluationRepo.DeleteEvaluationAsync(id);
+
+            (TempData["MessageType"], TempData["Message"]) = result switch
+            {
+                1 => ("success", "Feedback deleted successfully."),
+                -1 => ("error", "Something went wrong while deleting feedback."),
+                _ => ("warning", "Unexpected result from deletion process.")
+            };
+            return RedirectToAction("FeedbackList", new { userId = evaluatedUserId });
+        }
+
         #endregion
     }
 }

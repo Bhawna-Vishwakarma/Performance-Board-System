@@ -112,6 +112,56 @@
     margin-left: 250px;
 }
 
+/*Dashboard section heading styles*/
+.animated-heading {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    animation: fadeInSlide 1s ease-in-out;
+}
+
+@keyframes fadeInSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-heading:hover {
+    color: #326a98;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+}
+.section-heading {
+    color: #333;
+    font-weight: 600;
+    border-left: 4px solid #326a98;
+    padding-left: 12px;
+    transition: all 0.3s ease;
+}
+
+    .section-heading:hover {
+        color: #326a98;
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+.dashboard-card {
+    background-color: #fff8f8;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .dashboard-card:hover {
+        background-color: white;
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
 .nav-item:hover, .active {
     background-color: #577eb5 !important;
     border-radius: 10px;

@@ -30,15 +30,6 @@ namespace Performance_Board_System.Controllers
             return View();
         }
 
-        /// <summary>
-        /// Get Employee Rating.
-        /// </summary>
-        /// <returns></returns>
-        [Route("my-rating")]
-        public IActionResult Rating()
-        {
-            return View();
-        }
 
         /// <summary>
         /// Get Employee Feedback.

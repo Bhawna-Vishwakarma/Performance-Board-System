@@ -15,6 +15,7 @@ builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRoleR
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IRatingRepository, Performance_Board_System.Repository.Implementations.RatingRepository>();
 builder.Services.AddScoped<Performance_Board_System.Repository.Interfaces.IAttendanceStatusRepository, Performance_Board_System.Repository.Implementations.AttendanceStatusRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
 
 //Added for session
 builder.Services.AddSession(options =>
