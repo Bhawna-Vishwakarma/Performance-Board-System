@@ -54,6 +54,10 @@
                             {
                                 <span class="p-1 bg-success text-white rounded-2">Marked</span>
                             }
+                            else if (!day.IsToday && day.Date < DateTime.Today && !day.IsCheckedIn && !day.CheckOutTime.HasValue)
+                            {
+                                <span class="p-1 bg-warning text-white rounded-2">Not Filled</span>
+                            }
                             else
                             {
                                 <span>-</span>

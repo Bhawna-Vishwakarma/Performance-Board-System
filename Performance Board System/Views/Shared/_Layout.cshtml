@@ -57,48 +57,48 @@
                     <ul class="nav flex-column">
 
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="AdminDashboard">
-                                <i class="bi bi-speedometer2"></i> Dashboard
+                            <a class="nav-link text-white @(currentAction == "AdminDashboard" ? "active" : "")" asp-controller="Admin" asp-action="AdminDashboard">
+                                <i class="bi bi-speedometer2"></i> Admin Dashboard
                             </a>
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="DepartmentList">
+                            <a class="nav-link text-white @(currentAction == "DepartmentList" ? "active" : "")" asp-controller="Admin" asp-action="DepartmentList">
                                 <i class="bi bi-diagram-3"></i> Departments
                             </a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="DesignationList">
+                            <a class="nav-link text-white @(currentAction == "DesignationList" ? "active" : "")" asp-controller="Admin" asp-action="DesignationList">
                                 <i class="bi bi-person-badge"></i> Designations
                             </a>
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="RoleList">
+                            <a class="nav-link text-white @(currentAction == "RoleList" ? "active" : "")" asp-controller="Admin" asp-action="RoleList">
                                 <i class="bi bi-person-check"></i> Roles
                             </a>
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="RatingList">
+                            <a class="nav-link text-white @(currentAction == "RatingList" ? "active" : "")" asp-controller="Admin" asp-action="RatingList">
                                 <i class="bi bi-star-half"></i> Rating Master
                             </a>
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="AttendanceStatusList">
+                            <a class="nav-link text-white @(currentAction == "AttendanceStatusList" ? "active" : "")" asp-controller="Admin" asp-action="AttendanceStatusList">
                                 <i class="bi bi-calendar-check"></i> Attendance Status
                             </a>
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a class="nav-link text-white" asp-controller="Admin" asp-action="UserList">
+                            <a class="nav-link text-white @(currentAction == "UserList" ? "active" : "")" asp-controller="Admin" asp-action="UserList">
                                 <i class="bi bi-person-circle"></i> User Management
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Account" asp-action="Logout">
+                            <a class="nav-link text-white @(currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">
                                 <i class="bi bi-box-arrow-right"></i> Logout
                             </a>
                         </li>
@@ -113,12 +113,12 @@
                     <h4 class="mb-4">Performance Board System</h4>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Manager" asp-action="ManagerDashboard">
-                                <i class="bi bi-speedometer2"></i> Dashboard
+                            <a class="nav-link text-white @(currentAction == "ManagerDashboard" ? "active" : "")" asp-area="" asp-controller="Manager" asp-action="ManagerDashboard">
+                                <i class="bi bi-speedometer2"></i> Manager Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Manager" asp-action="UserList">
+                            <a class="nav-link text-white @(currentAction == "UserList" ? "active" : "")" asp-controller="Manager" asp-action="UserList">
                                 <i class="bi bi-person-circle"></i> User Managment
                             </a>
                         </li>
@@ -133,12 +133,12 @@
                             </a>
                         </li> *@
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <a class="nav-link text-white @(currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">
                                 <i class="bi bi-shield-lock"></i> Privacy
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Account" asp-action="Logout">
+                            <a class="nav-link text-white @(currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">
                                 <i class="bi bi-box-arrow-right"></i> Logout
                             </a>
                         </li>
@@ -151,27 +151,27 @@
                     <h4 class="mb-4">Performance Board System</h4>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Employee" asp-action="EmployeeDashboard">
+                            <a class="nav-link text-white @(currentAction == "EmployeeDashboard" ? "active" : "")" asp-area="" asp-controller="Employee" asp-action="EmployeeDashboard">
                                 <i class="bi bi-speedometer2"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Employee" asp-action="Rating">
+                            <a class="nav-link text-white @(currentAction == "Rating" ? "active" : "")" asp-controller="Employee" asp-action="Rating">
                                 <i class="bi bi-star-half"></i> My Ratings
                             </a>
                         </li>
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-white" asp-controller="Home" asp-action="Feedback">
                                 <i class="bi bi-chat-left-text"></i> Feedback
                             </a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Employee" asp-action="Attendance">
+                            <a class="nav-link text-white @(currentAction == "Attendance" ? "active" : "")" asp-controller="Employee" asp-action="Attendance">
                                 <i class="bi bi-calendar-check"></i> Attendance
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <a class="nav-link text-white @(currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">
                                 <i class="bi bi-shield-lock"></i> Privacy
                             </a>
                         </li>
