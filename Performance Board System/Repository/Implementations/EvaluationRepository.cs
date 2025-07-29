@@ -76,7 +76,7 @@ namespace Performance_Board_System.Repository.Implementations
                     ev.FullName AS EvaluatorName
                 FROM EmployeeEvaluation e
                 INNER JOIN [User] ev ON e.EvaluatorUserId = ev.UserId
-                WHERE e.EvaluatedUserId = 2 
+                WHERE e.EvaluatedUserId = @userId 
                   AND e.IsActive = 1 
                   AND ISNULL(e.Comment, '') <> '' 
                 ORDER BY e.EvaluationDate DESC";
@@ -96,7 +96,7 @@ namespace Performance_Board_System.Repository.Implementations
                     ISNULL(r3.RatingScore, 0) + 
                     ISNULL(r4.RatingScore, 0) + 
                     ISNULL(r5.RatingScore, 0)
-                ) / 5.0
+                ) / 1.0
             ) AS AverageScore
         FROM EmployeeEvaluation e
         LEFT JOIN Rating r1 ON e.CommunicationRatingId = r1.RatingId
