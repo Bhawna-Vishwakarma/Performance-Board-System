@@ -1,0 +1,211 @@
+﻿body {
+/*     background: linear-gradient(135deg, #dbeafe, #f0f9ff); */
+    background: linear-gradient(120deg, #fdfcfb, #e2d1c3);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.add-new-btn{
+    background-color: salmon;
+    color: white;
+}
+.bg-primary {
+    background-color: #326a98 !important;
+}
+.border-primary {
+    border-color: #eebf34 !important;
+}
+/*Login and SignUp Styles.*/
+.signup-container {
+    margin-top: 50px;
+    width: 500px;
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+    .input-wrapper input {
+        width: 100%;
+        padding: 10px 10px 10px 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: none;
+    }
+
+.input-wrapper label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #aaa;
+    font-size: 14px;
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+.input-wrapper input:focus ~ label,
+.input-wrapper input:not(:placeholder-shown) ~ label {
+    top: -10px;
+    left: 5px;
+    font-size: 12px;
+    color: #007bff;
+    background: white;
+    padding: 0 5px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #007bff;
+}
+
+#passwordStrength {
+    height: 5px;
+    margin-top: 5px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#passwordStrengthBar {
+    height: 100%;
+    width: 0%;
+    transition: 0.3s;
+}
+
+.strength-weak {
+    background-color: red;
+}
+
+.strength-medium {
+    background-color: orange;
+}
+
+.strength-strong {
+    background-color: green;
+}
+
+/*Dashboard / Index and Sidebar Page Style*/
+.dashboardLayout {
+    min-height: 100vh;
+}
+
+#sidebar {
+    width: 250px;
+    min-height: 100vh;
+    position: fixed;
+    background-color: #326a98;
+}
+
+.bi-star-fill {
+    color: #ffc107;
+/*    font-size: 16px;*/
+}
+.mainContent {
+/*    background: linear-gradient(120deg, #fdfcfb, #e2d1c3);*/
+    margin-left: 250px;
+}
+
+/*Dashboard section heading styles*/
+.animated-heading {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    animation: fadeInSlide 1s ease-in-out;
+}
+
+@keyframes fadeInSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-heading:hover {
+    color: #326a98;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+}
+.section-heading {
+    color: #333;
+    font-weight: 600;
+    border-left: 4px solid #326a98;
+    padding-left: 12px;
+    transition: all 0.3s ease;
+}
+
+    .section-heading:hover {
+        color: #326a98;
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+.dashboard-card {
+    background-color: #fff8f8;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .dashboard-card:hover {
+        background-color: white;
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+.nav-item:hover, .active {
+    background-color: #577eb5 !important;
+    border-radius: 10px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+.nav-link {
+    text-decoration: none;
+}
+.nav-item {
+    margin-bottom: 10px;
+}
+
+/*MyRating section Styles.*/
+.rating-card {
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    padding: 2rem;
+    background: #ffffff;
+}
+
+.metric-label {
+    font-weight: 600;
+}
+
+.rating-badge {
+    font-size: 1.2rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.average-score {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+@@media (max-width: 768px) {
+    .rating-card {
+        padding: 1.5rem;
+    }
+}

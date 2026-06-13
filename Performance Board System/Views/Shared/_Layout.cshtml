@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var isAuthPage = (currentController == "Account" && (currentAction == "Login" || currentAction == "SignUp"));
+    var userRole = Context.Session.GetInt32("UserRole");
+
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,47 +13,197 @@
     <title>@ViewData["Title"] - Performance_Board_System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Performance_Board_System.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Performance_Board_System</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+    @* @if(!isAuthPage)
+    {
+        <header class="position-fixed start-0">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Performance Board System</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    } *@
+    <div class="">
+        @if (!isAuthPage)
+        {
+            <!-- Sidebar -->
+            @if (userRole == 1)
+            {
+                <div class="text-white p-3" id="sidebar">
+                    <h5 class="mb-4">Performance Board System</h5>
+
+                    <ul class="nav flex-column">
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "AdminDashboard" ? "active" : "")" asp-controller="Admin" asp-action="AdminDashboard">
+                                <i class="bi bi-speedometer2"></i> Admin Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "DepartmentList" ? "active" : "")" asp-controller="Admin" asp-action="DepartmentList">
+                                <i class="bi bi-diagram-3"></i> Departments
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "DesignationList" ? "active" : "")" asp-controller="Admin" asp-action="DesignationList">
+                                <i class="bi bi-person-badge"></i> Designations
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "RoleList" ? "active" : "")" asp-controller="Admin" asp-action="RoleList">
+                                <i class="bi bi-person-check"></i> Roles
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "RatingList" ? "active" : "")" asp-controller="Admin" asp-action="RatingList">
+                                <i class="bi bi-star-half"></i> Rating Master
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "AttendanceStatusList" ? "active" : "")" asp-controller="Admin" asp-action="AttendanceStatusList">
+                                <i class="bi bi-calendar-check"></i> Attendance Status
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentAction == "UserList" ? "active" : "")" asp-controller="Admin" asp-action="UserList">
+                                <i class="bi bi-person-circle"></i> User Management
+                            </a>
+                        </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white @(currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+            }
+            @if (userRole == 2)
+            {
+                <div class="text-white p-3" id="sidebar">
+                    <h4 class="mb-4">Performance Board System</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentAction == "ManagerDashboard" ? "active" : "")" asp-area="" asp-controller="Manager" asp-action="ManagerDashboard">
+                                <i class="bi bi-speedometer2"></i> Manager Dashboard
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white @(currentAction == "UserList" ? "active" : "")" asp-controller="Manager" asp-action="UserList">
+                                <i class="bi bi-person-circle"></i> User Managment
+                            </a>
+                        </li>
+                        @* <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Feedback">
+                                <i class="bi bi-chat-left-text"></i> Feedback
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="signup">Sign-up</a>
+                            <a class="nav-link text-white" asp-controller="Employee" asp-action="Attendance">
+                                <i class="bi bi-calendar-check"></i> Attendance
+                            </a>
+                        </li> *@
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-lock"></i> Privacy
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="login">Login</a>
+                            <a class="nav-link text-white @(currentAction == "Logout" ? "active" : "")" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
                         </li>
                     </ul>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+            }
+            @if (userRole == 3)
+            {
+                <div class="text-white p-3" id="sidebar">
+                    <h4 class="mb-4">Performance Board System</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentAction == "EmployeeDashboard" ? "active" : "")" asp-area="" asp-controller="Employee" asp-action="EmployeeDashboard">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentAction == "Rating" ? "active" : "")" asp-controller="Employee" asp-action="Rating">
+                                <i class="bi bi-star-half"></i> My Ratings
+                            </a>
+                        </li>
+                        @* <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Feedback">
+                                <i class="bi bi-chat-left-text"></i> Feedback
+                            </a>
+                        </li> *@
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentAction == "Attendance" ? "active" : "")" asp-controller="Employee" asp-action="Attendance">
+                                <i class="bi bi-calendar-check"></i> Attendance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white @(currentAction == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-lock"></i> Privacy
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
+        }
+        <main role="main">
             @RenderBody()
+            @if(!isAuthPage){
+                <footer class="mainContent border-top mt-5 mb-3 footer text-muted">
+                    <div class="container text-center">
+                        &copy; 2025 - Performance_Board_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </footer>
+            }
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Performance_Board_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    @* @if(!isAuthPage)
+    {
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2025 - Performance_Board_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    } *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

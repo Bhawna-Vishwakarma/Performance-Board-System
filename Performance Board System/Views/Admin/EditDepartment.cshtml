@@ -1,0 +1,20 @@
+﻿@model Department
+@{
+    ViewData["Title"] = "Edit Department";
+}
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h3>@ViewData["Title"]</h3>
+        <form asp-controller="Admin" asp-action="EditDepartment" method="post">
+            <div class="form-group mb-2">
+                <input type="hidden" asp-for="@Model.DepartmentID" />
+                <label class="my-2" asp-for="DepartmentName"></label>
+                <input asp-for="DepartmentName" class="form-control" required />
+                <span asp-validation-for="DepartmentName" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">Save</button>
+            <a asp-action="DepartmentList" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

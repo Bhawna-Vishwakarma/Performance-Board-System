@@ -1,0 +1,19 @@
+﻿@model Designation
+@{
+    ViewData["Title"] = "Create Designation";
+}
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h3>@ViewData["Title"]</h3>
+        <form asp-action="CreateDesignation" asp-controller="Admin" method="post">
+            <div class="form-group mb-2">
+                <label class="my-2" asp-for="Title"></label>
+                <input asp-for="Title" class="form-control" required />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">Save</button>
+            <a asp-action="DesignationList" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

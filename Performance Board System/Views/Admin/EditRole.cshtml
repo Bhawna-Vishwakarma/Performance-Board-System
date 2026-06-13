@@ -1,0 +1,22 @@
+﻿@model Performance_Board_System.Models.Role
+
+@{
+	ViewData["Title"] = "Edit Role";
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-3" id="mainContent">
+		<h3>@ViewData["Title"]</h3>
+		<form asp-controller="Admin" asp-action="EditRole" method="post">
+			<div class="form-group mb-2">
+				<input type="hidden" asp-for="@Model.RoleId" />
+				<label class="my-2" asp-for="RoleName"></label>
+				<input asp-for="RoleName" class="form-control" required />
+				<span asp-validation-for="RoleName" class="text-danger"></span>
+			</div>
+			<button type="submit" class="btn btn-success">Save</button>
+			<a asp-action="RoleList" class="btn btn-secondary">Cancel</a>
+		</form>
+	</div>
+</div>

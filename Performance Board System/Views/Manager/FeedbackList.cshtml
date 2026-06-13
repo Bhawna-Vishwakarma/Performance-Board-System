@@ -1,0 +1,52 @@
+﻿@model IEnumerable<EvaluationDisplayViewModel>
+@{
+    ViewData["Title"] = "Feedback History";
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h2 class="mb-4">Employee Feedback History</h2>
+
+        <table class="table table-bordered border-warning">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Evaluator</th>
+                    <th>Period</th>
+                    <th>Communication</th>
+                    <th>Punctuality</th>
+                    <th>Teamwork</th>
+                    <th>Task-Completion</th>
+                    <th>Attendance</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 14px;" class="bg-white">
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>@e.EvaluatorName</td>
+                        <td>@e.EvaluationPeriodStart.ToShortDateString() - <br /> @e.EvaluationPeriodEnd.ToShortDateString()</td>
+                        <td>@e.CommunicationRating</td>
+                        <td>@e.PunctualityRating</td>
+                        <td>@e.TeamworkRating</td>
+                        <td>@e.TaskCompletionRating</td>
+                        <td>@e.AttendanceRating</td>
+                        <td>@e.Comment</td>
+                        <td>@e.EvaluationDate.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <a asp-action="DeleteFeedback" asp-route-id="@e.EvaluationId" asp-route-evaluatedUserId="@e.EvaluatedUserId" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this feedback?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("_ToasterNotification")

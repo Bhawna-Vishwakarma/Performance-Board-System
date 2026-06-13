@@ -1,0 +1,78 @@
+﻿@model List<WeeklyAttendanceViewModel>
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h3>Mark Your Attendance</h3>
+        <form action ="/attendance-record" method="get" class="row g-2 mb-4">
+            <div class="col-md-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" name="startDate" value="@(Context.Request.Query["endDate"])" />
+            </div>
+            <div class="col-md-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" class="form-control" name="endDate" value="@(Context.Request.Query["endDate"])" />
+            </div>
+            <div class="col-md-3 align-self-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                @* <button type="button" class="btn btn-secondary ms-2" onclick="clearDateFilters()">Reset</button> *@
+                <a href="@Url.Action("Attendance", "Employee")" class="btn btn-secondary ms-2">Reset</a>
+            </div>
+        </form>
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Date</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Status</th>
+                    <th>Remark</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                @foreach (var day in Model)
+                {
+                    <tr>
+                        <td>@day.Date.ToString("dddd, dd MMM")</td>
+                        <td>@day.CheckInTime</td>
+                        <td>@day.CheckOutTime</td>
+                        <td>@day.StatusName</td>
+                        <td>@day.Remarks</td>
+                        <td>
+                            @if (day.IsToday && !day.IsCheckedIn)
+                            {
+                                <a href="@Url.Action("CheckIn", "Employee")" class="btn btn-sm btn-primary">Check-In</a>
+                            }
+                            else if (day.IsToday && day.IsCheckedIn && day.CheckOutTime == null)
+                            {
+                                <form asp-action="CheckOut" asp-controller="Employee" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-warning">Check-Out</button>
+                                </form>
+                            }
+                            else if (day.IsToday && day.IsCheckedIn && day.CheckOutTime != null)
+                            {
+                                <span class="p-1 bg-success text-white rounded-2">Marked</span>
+                            }
+                            else if (!day.IsToday && day.Date < DateTime.Today && !day.IsCheckedIn && !day.CheckOutTime.HasValue)
+                            {
+                                <span class="p-1 bg-warning text-white rounded-2">Not Filled</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // function clearDateFilters() {
+    //     document.querySelector('input[name="startDate"]').value = "";
+    //     document.querySelector('input[name="endDate"]').value = "";
+    // }
+</script>

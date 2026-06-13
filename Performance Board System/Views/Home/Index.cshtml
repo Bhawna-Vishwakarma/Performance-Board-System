@@ -1,16 +1,103 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+	var messageType = TempData["MessageType"] as string;
+	var message = TempData["Message"] as string;
     var userName = Context.Session.GetString("UserFullName");
     var userEmail = Context.Session.GetString("UserEmail");
     var userRole = Context.Session.GetString("UserRole");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h2>Welcome, @userName 👋</h2>
+        <p class="text-muted">Here’s a quick summary of your performance</p>
 
-	<h1 class="display-4">Hello, @userName!</h1>
-	<p>Your email is: @userEmail</p>
-	<p>Your role is: @userRole</p>
-    <a class="nav-link active " asp-controller="Account" asp-action="Logout"> <i class="bi bi-box-arrow-right"></i>  Logout</a>
+        <!-- Summary Cards -->
+        <div class="row g-3 my-3">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Overall Rating</h5>
+                        <p class="display-6 text-success fw-bold">4.2 <i class="bi bi-star-fill me-1"></i></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Tasks Completed</h5>
+                        <p class="display-6 text-primary fw-bold">87%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Attendance</h5>
+                        <p class="display-6 text-warning fw-bold">96%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Chart Placeholder -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Monthly Performance</h5>
+                <div id="performanceChart" style="height: 300px;"></div>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Recent Feedback</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">✅ Great teamwork on the last project!</li>
+                    <li class="list-group-item">🕒 Try to improve time management during sprints.</li>
+                    <li class="list-group-item">💡 Good initiative in proposing new ideas!</li>
+                </ul>
+            </div>
+        </div>
+        @* <footer class="border-top mt-5 footer text-muted">
+            <div class="container text-center">
+                &copy; 2025 - Performance_Board_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer> *@
+    </div>
 </div>
+
+@await Html.PartialAsync("_ToasterNotification")
+
+@section Scripts {
+    <!-- Placeholder for chart (e.g., Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Performance Score',
+                    data: [80, 82, 85, 88, 90],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: '#007bff',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+}

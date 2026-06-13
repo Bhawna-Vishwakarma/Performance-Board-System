@@ -1,0 +1,215 @@
+﻿@* @model List<AttendanceViewModel>
+@{
+	ViewData["Title"] = "Attendance";
+	var messageType = TempData["MessageType"] as string;
+	var message = TempData["Message"] as string;
+}
+
+<style>
+	@@media (max-width: 576px) {
+		table {
+			font-size: 0.875rem;
+		}
+
+		h3 {
+			font-size: 1.2rem;
+		}
+	}
+
+	.table thead th {
+		white-space: nowrap;
+	}
+
+	.table td,
+	.table th {
+		vertical-align: middle;
+	}
+</style>
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<div class="mainContent p-3" id="mainContent">
+
+		<!-- Header & Filter -->
+		<div class="row mb-4 justify-content-between align-items-center">
+			<div class="col-md-6">
+				<h3 class="mb-0">Attendance Records</h3>
+			</div>
+			<div class="col-md-6 text-md-end mt-3 mt-md-0">
+				<form class="d-inline-flex gap-2" method="post" asp-action="AttendanceFilter">
+					<input type="date" class="form-control" name="dateFilter" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+					<button type="submit" class="btn btn-primary">Filter</button>
+				</form>
+			</div>
+		</div>
+
+		@if (ViewBag.IsFilterApplied == true)
+		{
+			<!-- Filtered Single Day Table -->
+			<div class="table-responsive shadow rounded">
+				<table class="table table-bordered table-hover align-middle text-center mb-0">
+					<thead class="bg-primary text-white">
+						<tr>
+							<th>Date</th>
+							<th>Name</th>
+							<th>Check In</th>
+							<th>Check Out</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+							@if (Model != null && Model.Count > 0)
+							{
+								@foreach (var record in Model)
+								{
+									<tr>
+										<td>@record.Date.ToString("dd-MM-yyyy")</td>
+										<td>@record.FullName</td>
+										<td>@record.CheckInTime</td>
+										<td>@record.CheckOutTime</td>
+										<td>
+											@if (record.Status == "Present")
+											{
+												<span class="badge bg-success">Present</span>
+											}
+											else if (record.Status == "Half Day")
+											{
+												<span class="badge bg-warning text-dark">Half Day</span>
+											}
+											else if (record.Status == "Work From Home")
+											{
+												<span class="badge bg-info text-dark">WFH</span>
+											}
+											else if (record.Status == "Remote")
+											{
+												<span class="badge bg-primary">Remote</span>
+											}
+											else
+											{
+												<span class="badge bg-danger">Absent</span>
+											}
+										</td>
+									</tr>
+								}
+							}
+							else
+							{
+								<tr>
+									<td colspan="5">No Record Found.</td>
+								</tr>
+							}
+					</tbody>
+				</table>
+			</div>
+		}
+		else
+		{
+			<!-- Weekly Attendance Table -->
+			<div class="table-responsive shadow rounded">
+				<table class="table table-bordered table-hover align-middle text-center mb-0">
+					<thead class="bg-primary text-white">
+						<tr>
+							<th>Days</th>
+							<th>Name</th>
+							<th>Date</th>
+							<th>Check-In</th>
+							<th>Check-Out</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+							<tr>
+								<td>@item.Date.ToString("dddd")</td>
+								<td>@item.FullName</td>
+								<td>@item.Date.ToString("dd-MMM-yyyy")</td>
+								<td>@item.CheckInTime</td>
+								<td>@item.CheckOutTime</td>
+								<td>
+									@if (item.Status == "Present")
+									{
+										<span class="badge bg-success">Present</span>
+									}
+									else if (item.Status == "Half Day")
+									{
+										<span class="badge bg-warning text-dark">Half Day</span>
+									}
+									else if (item.Status == "Work From Home")
+									{
+										<span class="badge bg-info text-dark">WFH</span>
+									}
+									else if (item.Status == "Remote")
+									{
+										<span class="badge bg-primary">Remote</span>
+									}
+									else if (item.Status == "Absent")
+									{
+										<span class="badge bg-danger">Absent</span>
+									}
+									else
+									{
+										<span class="">-</span>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
+
+
+		<!-- Mark Attendance -->
+		<div class="row justify-content-center mt-5">
+			<div class="col-md-6 col-lg-5">
+				<div class="card shadow-lg">
+					<div class="card-body p-4">
+						<h3 class="text-center mb-4">🕒 Mark Your Attendance</h3>
+
+						<form asp-action="MarkAttendance" method="post" id="attendanceForm">
+							<input type="hidden" name="ActionType" id="actionType" />
+							<input type="hidden" name="CheckInTime" id="checkInTime" />
+							<input type="hidden" name="CheckOutTime" id="checkOutTime" />
+
+							<div class="mb-3" id="statusDiv">
+								<label for="status" class="form-label">Status</label>
+								<select class="form-select" id="status" name="Status">
+									<option value="Present">Present</option>
+									<option value="Half Day">Half Day</option>
+									<option value="Work From Home">Work From Home</option>
+									<option value="Remote">Remote</option>
+								</select>
+							</div>
+
+							<div class="d-grid gap-2 mt-4">
+								<button type="submit" class="btn btn-success" onclick="setAttendance('CheckIn')">Check In</button>
+								<button type="submit" class="btn btn-secondary" onclick="setAttendance('CheckOut')">Check Out</button>
+							</div>
+						</form>
+
+						<div class="text-center mt-3">
+							<a href="/Dashboard" class="text-decoration-none">⬅ Back to Dashboard</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@await Html.PartialAsync("_ToasterNotification")
+@section Scripts {
+	<script>
+		function setAttendance(type) {
+			const now = new Date();
+			const formattedTime = now.toTimeString().slice(0, 5); // "HH:mm"
+
+			document.getElementById("actionType").value = type;
+
+			if (type === 'CheckIn') {
+				document.getElementById("checkInTime").value = formattedTime;
+			} else {
+				document.getElementById("checkOutTime").value = formattedTime;
+			}
+		}
+	</script>
+} *@

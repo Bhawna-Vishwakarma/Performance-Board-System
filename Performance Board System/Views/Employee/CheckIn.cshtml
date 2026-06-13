@@ -1,0 +1,39 @@
+﻿@model AttendanceCheckInModel
+@{
+    ViewBag.Title = "Check-In";
+}
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h3>Mark Attendance</h3>
+        <form asp-action="CheckIn" method="post">
+            <div class="form-group mt-3">
+                <label>Status</label>
+                <select asp-for="StatusId" class="form-control" asp-items="(IEnumerable<SelectListItem>)ViewBag.Statuses">
+                    <option class="text-muted" value="">-- Select Status --</option>
+                </select>
+            </div>
+
+            <div class="form-group mt-3">
+                <label>Remarks</label>
+                <textarea asp-for="Remarks" class="form-control" placeholder="Give Short remark or reason if late..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Check In</button>
+        </form>
+    </div>
+</div>
+
+@* <h2>Check In</h2>
+    <form asp-action="CheckIn" method="post">
+        <div class="form-group">
+            <label>Status</label>
+            <select asp-for="StatusId" class="form-control" asp-items="ViewBag.Statuses"></select>
+        </div>
+        <div class="form-group">
+            <label>Remark</label>
+            <textarea asp-for="Remarks" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form> *@

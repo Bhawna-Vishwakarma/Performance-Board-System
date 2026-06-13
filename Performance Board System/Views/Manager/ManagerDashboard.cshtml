@@ -1,0 +1,94 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+	var messageType = TempData["MessageType"] as string;
+	var message = TempData["Message"] as string;
+	var userName = Context.Session.GetString("UserFullName");
+	var userEmail = Context.Session.GetString("UserEmail");
+	var userRole = Context.Session.GetString("UserRole");
+}
+
+
+<div class="dashboardLayout" id="dashboardLayout">
+	<!-- Main Content -->
+	<div class="mainContent p-3" id="mainContent">
+		<h3 id="welcomeText" class="mb-3 animated-heading"></h3>
+
+		<h4 class="section-heading mt-4 mb-2">📊 Master Records</h4>
+		<div class="row text-center">
+			<div class="col-md-3 mb-4" style="cursor: pointer;" onclick="window.location.href='@Url.Action("UserList", "Manager")'">
+				<div class="card dashboard-card shadow-sm border-start border-5 border-success">
+					<div class="card-body">
+						<i class="bi bi-building text-success fs-3"></i>
+						<h5 class="mt-2">Total Users</h5>
+						<h2 class="fw-bold counter" data-target="@ViewBag.TotalUsers">0</h2>
+					</div>
+				</div>
+			</div>
+		</div> <!-- ✅ This closing div was missing -->
+
+		<h4 class="section-heading mt-4"><i class="bi bi-calendar-range"></i> Latest Feedbacks</h4>
+		<div class="table-responsive">
+			<table class="table table-hover table-bordered border-warning align-middle text-center">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th><i class="bi bi-calendar-range"></i> Start</th>
+						<th><i class="bi bi-calendar-range"></i> End</th>
+						<th><i class="bi bi-person-circle"></i> Given By</th>
+						<th><i class="bi bi-person-bounding-box"></i> Given To</th>
+						<th><i class="bi bi-chat-left-text"></i> Comment</th>
+						<th><i class="bi bi-clock-history"></i> Evaluation Date</th>
+						<th><i class="bi bi-star-half"></i> Avg. Score</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white" style="cursor: pointer;">
+					@foreach (var eval in ViewBag.LatestFeedbacks)
+					{
+						<tr onclick="window.location.href='@Url.Action("FeedbackList", "Manager", new { userId = eval.EvaluatedUserId })'">
+							<td>@eval.EvaluationPeriodStart.ToShortDateString()</td>
+							<td>@eval.EvaluationPeriodEnd.ToShortDateString()</td>
+							<td>@eval.EvaluatorName</td>
+							<td>@eval.EvaluatedName</td>
+							<td>
+								<span title="@eval.Comment">
+									@((eval.Comment?.Length ?? 0) > 30 ? eval.Comment.Substring(0, 30) + "..." : eval.Comment)
+								</span>
+							</td>
+							<td>@eval.EvaluationDate.ToShortDateString()</td>
+							<td>
+								<span class="badge bg-@GetScoreColor((decimal)eval.AverageScore)">
+									@eval.AverageScore
+								</span>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+@await Html.PartialAsync("_ToasterNotification")
+
+@functions {
+	public string GetScoreColor(decimal score)
+	{
+		if (score >= 4.5m) return "success";
+		else if (score >= 3.5m) return "warning";
+		else return "danger";
+	}
+}
+@section Scripts {
+	<script>
+		const text = "Welcome @userName 👋";
+		let index = 0;
+		const speed = 75;
+
+		function typeEffect() {
+			if (index < text.length) {
+				document.getElementById("welcomeText").innerHTML += text.charAt(index);
+				index++;
+				setTimeout(typeEffect, speed);
+			}
+		}
+		window.onload = typeEffect;
+	</script>
+}

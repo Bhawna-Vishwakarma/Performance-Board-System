@@ -1,71 +1,65 @@
 ﻿@model Performance_Board_System.Models.User
-
 @{
     ViewData["Title"] = "Sign Up";
-    var messageType = TempData["MessageType"] as string;
-    var message = TempData["Message"] as string;
+
 }
-
-<h2 class="text-center">Sign Up</h2>
-
-<form id="signupForm" asp-controller="Account" asp-action="SignUp" method="post" class="w-50 mx-auto mt-4">
-    <div class="input-wrapper">
-        <input type="email" name="Email" id="Email" placeholder="">
-        <label for="Email">Enter your Email</label>
-    </div>
-    <p id="emailPatternError" class="text-sm-start text-danger"></p>
-
-    <div class="input-wrapper">
-        <input type="text" name="FullName" id="FullName" placeholder="">
-        <label for="FullName">Enter your Full Name</label>
-    </div>
-    <p id="FullNameEmptyError" class="text-sm-start text-danger"></p>
-
-    <div class="input-wrapper">
-        <input type="password" name="PasswordHash" id="PasswordHash" placeholder="">
-        <label for="PasswordHash">Enter your Password</label>
-    </div>
-    <p id="passwordPatternError" class="text-sm-start text-danger"></p>
-
-
-    <div class="input-wrapper">
-        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="">
-        <label for="ConfirmPassword">Confirm your Password</label>
-    </div>
-    <p id="confirmPasswordError" class="text-sm-start text-danger"></p>
-
-    <div class="form-group mb-3">
-        <label asp-for="Role" class="form-label">Role</label>
-        <select asp-for="Role" class="form-select" name="Role">
-            <option value="">-- Select Role --</option>
-            <option value="Manager">Manager</option>
-            <option value="Employee">Employee</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
-
-    <div class="links">
-        <a asp-controller="Account" asp-action="Login">Already have an account? Login</a>
-    </div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-    </div>
-</form>
-@if (!string.IsNullOrEmpty(message))
-{
-    <div id="toast" class="toast align-items-center text-light rounded-end bg-@messageType border-0 position-fixed top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body p-4">
-                @message
-            </div>
-            <button type="button" class="btn-close text-black mt-0 me-0 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+<div class="signup-container mx-auto bg-white rounded-3 shadow py-4 px-5">
+    <h2 class="text-center">Sign Up</h2>
+    <form id="signupForm" asp-controller="Account" asp-action="SignUp" method="post" class="mt-4">
+        <div class="input-wrapper">
+            <input type="email" name="Email" id="Email" placeholder=" " required>
+            <label for="Email">Enter your Email<sup class="text-danger fw-bold">*</sup></label>
         </div>
-        <div class="progress" style="height: 5px;">
-            <div id="toastProgress" class="progress-bar bg-@messageType" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        <p id="emailPatternError" class="text-sm-start text-danger"></p>
+
+        <div class="input-wrapper">
+            <input type="text" name="FullName" id="FullName" placeholder=" " required>
+            <label for="FullName">Enter your Full Name<sup class="text-danger fw-bold">*</sup></label>
         </div>
-    </div>
-}
+        <p id="FullNameEmptyError" class="text-sm-start text-danger"></p>
+
+        <div class="input-wrapper position-relative">
+            <input type="password" name="PasswordHash" id="PasswordHash" placeholder=" " required>
+            <label for="PasswordHash">Enter your Password</label>
+            <span class="password-toggle" onclick="togglePassword('PasswordHash')">👁️</span>
+        </div>
+        <div id="passwordStrength" style="display: none;"><div id="passwordStrengthBar"></div></div>
+        <p id="passwordPatternError" class="text-sm-start text-danger"></p>
+
+        <div class="input-wrapper position-relative">
+            <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder=" " required>
+            <label for="ConfirmPassword">Confirm your Password</label>
+            <span class="password-toggle" onclick="togglePassword('ConfirmPassword')">👁️</span>
+        </div>
+        <p id="confirmPasswordError" class="text-sm-start text-danger"></p>
+
+        <div class="form-group mb-3">
+            @* <label asp-for="DepartmentID" class="form-label">Department<sup class="text-danger fw-bold">*</sup></label> *@
+            <select asp-for="DepartmentID" asp-items="ViewBag.Departments" class="form-select" required>
+                <option class="text-muted" value="">-- Select Department --</option>
+            </select>
+            <span asp-validation-for="DepartmentID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            @* <label asp-for="DesignationId" class="form-label">Designation<sup class="text-danger fw-bold">*</sup></label> *@
+            <select asp-for="DesignationId" asp-items="ViewBag.Designations" class="form-select" required>
+                <option value="">-- Select Designation --</option>
+            </select>
+            <span asp-validation-for="DesignationId" class="text-danger"></span>
+        </div>
+
+        <div class="links">
+            <a class="text-decoration-none text-primary" asp-controller="Account" asp-action="Login">Already have an account? Login</a>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary my-3 px-3">Sign Up</button>
+        </div>
+    </form>
+</div>
+
+@await Html.PartialAsync("_ToasterNotification")
 
 @* For Passwording Pattern Maching *@
 <script>
@@ -104,7 +98,7 @@
         }
 
         if (FullNameInput.value.trim() === "") {
-            document.getElementById("FullNameEmptyError").textContent = "First Name cannot be empty!";
+            document.getElementById("FullNameEmptyError").textContent = "Full Name cannot be empty!";
             isValid = false;
         } else {
             document.getElementById("FullNameEmptyError").textContent = ""; // Clear error if first name is not empty
@@ -152,6 +146,105 @@
         }
     });
 </script>
+@* script for hiding passwordStrengthBar display only when user typing his password *@
+<script>
+document.getElementById('PasswordHash').addEventListener('input', function () {
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthContainer = document.getElementById('passwordStrength');
+    const value = this.value;
+    const error = document.getElementById('passwordPatternError');
+
+    // Show/hide strength bar container
+    if (value.trim() === "") {
+        strengthContainer.style.display = "none";
+        strengthBar.style.width = "0%";
+        error.textContent = "";
+        return;
+    } else {
+        strengthContainer.style.display = "block";
+    }
+
+    // Password strength logic
+    let strength = 0;
+    if (value.length >= 8) strength++;
+    if (/[A-Z]/.test(value)) strength++;
+    if (/[0-9]/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+    // Update bar styles
+    if (strength <= 1) {
+        strengthBar.className = "strength-weak";
+        strengthBar.style.width = "33%";
+    } else if (strength === 2 || strength === 3) {
+        strengthBar.className = "strength-medium";
+        strengthBar.style.width = "66%";
+    } else {
+        strengthBar.className = "strength-strong";
+        strengthBar.style.width = "100%";
+    }
+
+    error.textContent = value.length < 8 ? "Password must be at least 8 characters." : "";
+});
+</script>
+
+@* script for without hiding passwordStrengthBar *@
+@* <script>
+    document.getElementById('Email').addEventListener('input', function () {
+        const emailPattern = /^[^ ]+@@[^ ]+\.[a-z]{2,3}$/;
+        const error = document.getElementById('emailPatternError');
+        if (!emailPattern.test(this.value)) {
+            error.textContent = "Please enter a valid email address.";
+        } else {
+            error.textContent = "";
+        }
+    });
+
+    document.getElementById('FullName').addEventListener('input', function () {
+        const error = document.getElementById('FullNameEmptyError');
+        error.textContent = this.value.trim() === "" ? "Full name is required." : "";
+    });
+
+    document.getElementById('PasswordHash').addEventListener('input', function () {
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const value = this.value;
+        const error = document.getElementById('passwordPatternError');
+
+        // Simple strength logic
+        let strength = 0;
+        if (value.length >= 8) strength++;
+        if (/[A-Z]/.test(value)) strength++;
+        if (/[0-9]/.test(value)) strength++;
+        if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+        // Update strength bar
+        if (strength === 0) {
+            strengthBar.style.width = "0%";
+        } else if (strength <= 2) {
+            strengthBar.className = "strength-weak";
+            strengthBar.style.width = "33%";
+        } else if (strength === 3) {
+            strengthBar.className = "strength-medium";
+            strengthBar.style.width = "66%";
+        } else {
+            strengthBar.className = "strength-strong";
+            strengthBar.style.width = "100%";
+        }
+
+        // Optional message
+        error.textContent = value.length < 8 ? "Password must be at least 8 characters." : "";
+    });
+
+    document.getElementById('ConfirmPassword').addEventListener('input', function () {
+        const error = document.getElementById('confirmPasswordError');
+        const password = document.getElementById('PasswordHash').value;
+        error.textContent = this.value !== password ? "Passwords do not match." : "";
+    });
+
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+    }
+</script> *@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var userName = Context.Session.GetString("UserFullName");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userRole = Context.Session.GetString("UserRole");
+    var feedbacks = ViewBag.RecentFeedbacks as List<dynamic>;
+    var categories = ((IEnumerable<(string Category, decimal Score)>)ViewBag.RatingCategories).ToList();
+    var labels = categories.Select(c => c.Category).ToList();
+    var scores = categories.Select(c => c.Score).ToList();
+}
+<style>
+    .dashboard-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .dashboard-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-title i {
+        margin-right: 8px;
+    }
+
+    .feedback-icon {
+        font-size: 1.2rem;
+        margin-right: 8px;
+    }
+
+    .list-group-item {
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+    }
+</style>
+
+<div class="dashboardLayout" id="dashboardLayout">
+    <!-- Main Content -->
+    <div class="mainContent p-3" id="mainContent">
+        <h3 id="welcomeText" class="mb-2 animated-heading"></h3>
+        <p class="text-muted">Here’s a quick summary of your performance</p>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 my-3">
+            <div class="col-md-5">
+                <div class="card dashboard-card shadow-sm border-start border-5 border-success">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-star-fill text-success"></i> Overall Rating Out of 25</h5>
+                        <h2 class="fw-bold text-success counter" data-target="@ViewBag.OverallRating">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card dashboard-card shadow-sm border-start border-5 border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-check-circle-fill text-danger"></i> Recent Feedbacks</h5>
+                        <h2 class="fw-bold text-danger counter" data-target="@ViewBag.RecentFeedbacks.Count">0%</h2>
+                    </div>
+                </div>
+            </div>
+
+            @* <div class="col-md-4">
+                <div class="card dashboard-card shadow-sm border-start border-5 border-warning">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-calendar-check-fill text-warning"></i> Attendance</h5>
+                        <h2 class="fw-bold text-warning counter" data-target="@ViewBag.AttendancePercentage">0%</h2>
+                    </div>
+                </div>
+            </div> *@
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-bar-chart-line-fill"></i> Monthly Performance</h5>
+                <div id="performanceChart">
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-bar-chart"></i> Category-wise Ratings</h5>
+                            <canvas id="ratingsChart" height="120"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-muted text-center mt-5">📊 Your performance data will appear here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-chat-dots-fill"></i> Recent Feedback</h5>
+                <ul class="list-group">
+                    @foreach (var feedback in feedbacks)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                💬 @feedback.Comment
+                            </span>
+                            <span class="badge bg-primary text-white px-2">
+                                 @feedback.EvaluatorName
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("_ToasterNotification")
+
+@section Scripts {
+    <!-- Placeholder for chart (e.g., Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = @Html.Raw(Json.Serialize(labels));
+        const data = @Html.Raw(Json.Serialize(scores));
+
+        new Chart(document.getElementById('ratingsChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Average Score',
+                    data: data,
+                    backgroundColor: ['#198754', '#0dcaf0', '#ffc107', '#6c757d', '#0d6efd'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        const text = "Welcome! @userName 👋";
+        let index = 0;
+        const speed = 75;
+
+        function typeEffect() {
+            if (index < text.length) {
+                document.getElementById("welcomeText").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, speed);
+            }
+        }
+        window.onload = typeEffect;
+    </script>
+}
+@functions {
+    public string GetScoreColor(decimal score)
+    {
+        if (score >= 4.5m) return "success";
+        else if (score >= 3.5m) return "warning";
+        else return "danger";
+    }
+}
